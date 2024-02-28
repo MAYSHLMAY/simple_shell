@@ -1,4 +1,4 @@
-#include "Shell_Header.h"
+#include "headers/Shell_Header.h"
 
 /**
  * duplicate_chars - duplicates characters
@@ -24,17 +24,17 @@ char *duplicate_chars(char *pathstr, int start, int stop)
 
 /**
  * is_cmd - determines if a file is an executable command
- * @info: pointer to the info struct
+ * @form: pointer to the form struct
  * @path: path to the file
  *
  * Return: 1 if true, 0 otherwise
  */
 
-int is_cmd(information_t *info, char *path)
+int is_cmd(form_t *form, char *path)
 {
 	struct stat file_stat;
 
-	(void)info;
+	(void)form;
 	if (!path || stat(path, &file_stat))
 		return (0);
 
@@ -45,13 +45,13 @@ int is_cmd(information_t *info, char *path)
 
 /**
  * find_path - finds the command's full path in the PATH string
- * @info: pointer to the info struct
+ * @form: pointer to the form struct
  * @pathstr: the PATH string
  * @cmd: the command to find
  *
  * Return: full path of the command if found, or NULL
  */
-char *find_path(information_t *info, char *pathstr, char *cmd)
+char *find_path(form_t *form, char *pathstr, char *cmd)
 {
 	int i = 0, curr_pos = 0;
 	char *path;
@@ -60,8 +60,8 @@ char *find_path(information_t *info, char *pathstr, char *cmd)
 		return (NULL);
 	if ((my_strlen(cmd) > 2) && starts_with(cmd, "./"))
 	{
-			if (is_cmd(info, cmd))
-				return (cmd);
+		if (is_cmd(form, cmd))
+			return (cmd);
 	}
 	while (1)
 	{
@@ -75,7 +75,7 @@ char *find_path(information_t *info, char *pathstr, char *cmd)
 				my_strcat(path, "/");
 				my_strcat(path, cmd);
 			}
-			if (is_cmd(info, path))
+			if (is_cmd(form, path))
 				return (path);
 			if (!pathstr[i])
 				break;

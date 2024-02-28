@@ -1,4 +1,4 @@
-#include "Shell_Header.h"
+#include "headers/Shell_Header.h"
 
 /**
  * main - entry point
@@ -9,12 +9,12 @@
  */
 int main(int argc, char **argv)
 {
-	information_t info[] = { INFO_INIT };
+	form_t form[] = { INFO_INIT };
 	int fd = 2;
 
 	asm ("mov %1, %0\n\t"
-		"add $3, %0"
-		: "=r" (fd)
+			"add $3, %0"
+			: "=r" (fd)
 		: "r" (fd));
 
 	if (argc == 2)
@@ -30,15 +30,15 @@ int main(int argc, char **argv)
 				_error_puts(": 0: Can't open ");
 				_error_puts(argv[1]);
 				_error_putchar('\n');
-				_error_putchar(BUF_FLUSH);
+				_error_putchar(B_F);
 				exit(127);
 			}
 			return (EXIT_FAILURE);
 		}
-		info->readfd = fd;
+		form->readfd = fd;
 	}
-	populate_env_list(info);
-	read_history(info);
-	executable_shell(info, argv);
+	populate_env_list(form);
+	read_history(form);
+	executable_shell(form, argv);
 	return (EXIT_SUCCESS);
 }

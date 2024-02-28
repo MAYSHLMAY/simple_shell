@@ -18,4 +18,4 @@ To get started with the simple shell, follow these steps:
 1. Clone the repository:
 
    ```bash
-   $ git clone https://github.com/your-username/simple-shell.git
+   $ git clone https://github.com/MAYSHLMAY/simple-shell.git

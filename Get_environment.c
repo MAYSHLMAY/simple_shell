@@ -1,32 +1,32 @@
-#include "Shell_Header.h"
+#include "headers/Shell_Header.h"
 
 /**
  * get_environ - returns the string array copy of our environ
- * @info: Structure containing potential arguments. Used to maintain
+ * @form: Structure containing potential arguments. Used to maintain
  *          constant function prototype.
  * Return: Always 0
  */
-char **get_environ(information_t *info)
+char **get_environ(form_t *form)
 {
-	if (!info->environ || info->env_changed)
+	if (!form->environ || form->env_changed)
 	{
-		info->environ = list_to_strings(info->env);
-		info->env_changed = 0;
+		form->environ = list_to_strings(form->env);
+		form->env_changed = 0;
 	}
 
-	return (info->environ);
+	return (form->environ);
 }
 
 /**
  * _unsetenv - Remove an environment variable
- * @info: Structure containing potential arguments. Used to maintain
+ * @form: Structure containing potential arguments. Used to maintain
  *        constant function prototype.
  *  Return: 1 on delete, 0 otherwise
  * @var: the string env var property
  */
-int _unsetenv(information_t *info, char *var)
+int _unsetenv(form_t *form, char *var)
 {
-	list_t *node = info->env;
+	list_t *node = form->env;
 	size_t i = 0;
 	char *p;
 
@@ -38,27 +38,27 @@ int _unsetenv(information_t *info, char *var)
 		p = starts_with(node->str, var);
 		if (p && *p == '=')
 		{
-			info->env_changed = delete_node_at_index(&(info->env), i);
+			form->env_changed = delete_node_at_index(&(form->env), i);
 			i = 0;
-			node = info->env;
+			node = form->env;
 			continue;
 		}
 		node = node->next;
 		i++;
 	}
-	return (info->env_changed);
+	return (form->env_changed);
 }
 
 /**
  * _setenv - Initialize a new environment variable,
  *             or modify an existing one
- * @info: Structure containing potential arguments. Used to maintain
+ * @form: Structure containing potential arguments. Used to maintain
  *        constant function prototype.
  * @var: the string env var property
  * @value: the string env var value
  *  Return: Always 0
  */
-int _setenv(information_t *info, char *var, char *value)
+int _setenv(form_t *form, char *var, char *value)
 {
 	char *buf = NULL;
 	list_t *node;
@@ -73,7 +73,7 @@ int _setenv(information_t *info, char *var, char *value)
 	my_strcpy(buf, var);
 	my_strcat(buf, "=");
 	my_strcat(buf, value);
-	node = info->env;
+	node = form->env;
 	while (node)
 	{
 		p = starts_with(node->str, var);
@@ -81,13 +81,13 @@ int _setenv(information_t *info, char *var, char *value)
 		{
 			free(node->str);
 			node->str = buf;
-			info->env_changed = 1;
+			form->env_changed = 1;
 			return (0);
 		}
 		node = node->next;
 	}
-	add_node_end(&(info->env), buf, 0);
+	add_node_end(&(form->env), buf, 0);
 	free(buf);
-	info->env_changed = 1;
+	form->env_changed = 1;
 	return (0);
 }
