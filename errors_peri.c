@@ -2,61 +2,36 @@
 
 /**
  * _error_puts - Prints an input string.
- * @str: The string to be printed.
+ * @c_r: The string to be printed.
  *
  * Return: Nothing.
  */
-void _error_puts(char *str)
+void _error_puts(char *c_r)
 {
-	int i = 0;
+	int index;
 
-	if (!str)
+	if (!c_r)
 		return;
-	while (str[i] != '\0')
-	{
-		_error_putchar(str[i]);
-		i++;
-	}
-}
-
-/**
- * _error_putchar - Writes the character c to stderr.
- * @c: The character to print.
- *
- * Return: On success 1.
- *         On error, -1 is returned, and errno is set appropriately.
- */
-int _error_putchar(char c)
-{
-	static int i;
-	static char buf[W_B_S];
-
-	if (c == B_F || i >= W_B_S)
-	{
-		write(2, buf, i);
-		i = 0;
-	}
-	if (c != B_F)
-		buf[i++] = c;
-	return (1);
+	for (index = 0; c_r[index] != '\0'; index++)
+		my_putchar(c_r[index]);
 }
 
 /**
  * _putfile_d - Writes the character c to the given file descriptor.
  * @c: The character to print.
- * @file_descriptor: The file descriptor to write to.
+ * @file_d: The file descriptor to write to.
  *
  * Return: On success 1.
  *         On error, -1 is returned, and errno is set appropriately.
  */
-int _putfile_d(char c, int file_descriptor)
+int _putfile_d(char c, int file_d)
 {
 	static int i;
 	static char buf[W_B_S];
 
 	if (c == B_F || i >= W_B_S)
 	{
-		write(file_descriptor, buf, i);
+		write(file_d, buf, i);
 		i = 0;
 	}
 	if (c != B_F)
@@ -66,20 +41,20 @@ int _putfile_d(char c, int file_descriptor)
 
 /**
  * _puts_filed - Prints an input string.
- * @str: The string to be printed.
- * @file_descriptor: The file descriptor to write to.
+ * @c_r: The string to be printed.
+ * @file_d: The file descriptor to write to.
  *
  * Return: The number of characters put.
  */
-int _puts_filed(char *str, int file_descriptor)
+int _puts_filed(char *c_r, int file_d)
 {
 	int i = 0;
 
-	if (!str)
+	if (!c_r)
 		return (0);
-	while (*str)
+	while (*c_r)
 	{
-		i += _putfile_d(*str++, file_descriptor);
+		i += _putfile_d(*c_r++, file_d);
 	}
 	return (i);
 }

@@ -5,17 +5,17 @@
 #include "lib_dirs.h"
 
 /**
- * struct liststr - singly linked list
+ * struct his_node - singly linked list
  * @num: the number field
- * @str: a string
- * @next: points to the next node
+ * @c_r: a string
+ * @next: points to the next nde
  */
-typedef struct liststr
+typedef struct his_node
 {
 	int num;
-	char *str;
-	struct liststr *next;
-} list_t;
+	char *c_r;
+	struct his_node *next;
+} histo_t;
 
 /**
  *struct info_pas - contains pseudo-arguements to pass into a function,
@@ -25,13 +25,13 @@ typedef struct liststr
  *@path: a string path for the current command
  *@argc: the argument count
  *@line_count: the error count
- *@error_number: the error code for exit()s
+ *@err_num: the error code for exit()s
  *@linecount_flag: if on count this line of input
  *@fname: the program filename
  *@env: linked list local copy of environ
  *@environ: custom modified copy of environ from LL env
- *@history: the history node
- *@alias: the alias node
+ *@history: the history nde
+ *@alias: the alias nde
  *@env_changed: on if environ was changed
  *@status: the return status of the last exec'd command
  *@cmd_buf: address of pointer to cmd_buf, on if chaining
@@ -46,12 +46,12 @@ typedef struct info_pas
 	char *path;
 	int argc;
 	unsigned int line_count;
-	int error_number;
+	int err_num;
 	int linecount_flag;
 	char *fname;
-	list_t *env;
-	list_t *history;
-	list_t *alias;
+	histo_t *env;
+	histo_t *history;
+	histo_t *alias;
 	char **environ;
 	int env_changed;
 	int status;
@@ -78,31 +78,27 @@ typedef struct builtin
 } builtin_table;
 
 
-/* toem_shloop.c */
+
 int executable_shell(form_t *, char **);
 int find_builtin(form_t *);
 void find_cmd(form_t *);
 void fork_cmd(form_t *);
 
-/* toem_parser.c */
 int is_cmd(form_t *, char *);
 char *duplicate_chars(char *, int, int);
 char *find_path(form_t *, char *, char *);
 
-
-/* toem_errors.c */
 void _error_puts(char *);
-int _error_putchar(char);
+int my_putchar(char);
 int _putfile_d(char c, int fd);
-int _puts_filed(char *str, int fd);
+int _puts_filed(char *c_r, int fd);
 
-/* toem_string.c */
 int my_strlen(char *);
 int my_strcmp(char *, char *);
 char *starts_with(const char *, const char *);
 char *my_strcat(char *, char *);
 
-/* toem_string1.c */
+
 char *my_strcpy(char *, char *);
 char *my_strdup(const char *);
 void my_puts(char *);
@@ -137,7 +133,7 @@ char *convert_number(long int, int, int);
 void remove_comments(char *);
 
 int shell_exit(form_t *);
-int _my_current_working_cd_cmd(form_t *);
+int _my_cd_cmd(form_t *);
 
 
 int _myhistory(form_t *);
@@ -177,15 +173,15 @@ int replace_vars(form_t *);
 int replace_string(char **, char *);
 
 /* -- lis__it -- */
-list_t *add_node(list_t **, const char *, int);
-list_t *add_node_end(list_t **, const char *, int);
-size_t print_list_str(const list_t *);
-int delete_node_at_index(list_t **, unsigned int);
-void free_list(list_t **);
-size_t list_len(const list_t *);
-char **list_to_strings(list_t *);
-size_t print_list(const list_t *);
-list_t *node_starts_with(list_t *, char *, char);
-ssize_t get_node_index(list_t *, list_t *);
+histo_t *add_node(histo_t **, const char *, int);
+histo_t *add_node_end(histo_t **, const char *, int);
+size_t print_list_str(const histo_t *);
+int delete_node_at_index(histo_t **, unsigned int);
+void free_list(histo_t **);
+size_t list_len(const histo_t *);
+char **list_to_strings(histo_t *);
+size_t print_list(const histo_t *);
+histo_t *node_starts_with(histo_t *, char *, char);
+ssize_t get_node_index(histo_t *, histo_t *);
 
 #endif

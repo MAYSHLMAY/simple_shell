@@ -64,14 +64,14 @@ char *my_strcpy(char *dest, char *src)
 
 /**
  * my_strdup - duplicates a string
- * @str: the string to duplicate
+ * @c_r: the string to duplicate
  * Return: pointer to the duplicated string
 */
 
-char *my_strdup(const char *str)
+char *my_strdup(const char *c_r)
 {
 	int length = 0;
-	const char *ptr = str;
+	const char *ptr = c_r;
 	char *ret;
 	char *dest;
 
@@ -84,7 +84,7 @@ char *my_strdup(const char *str)
 	ret = malloc(sizeof(char) * (length + 1));
 	if (ret == NULL)
 		return (NULL);
-	ptr = str;
+	ptr = c_r;
 	dest = ret;
 	while (*ptr)
 	{
@@ -98,19 +98,19 @@ char *my_strdup(const char *str)
 
 /**
  *my_puts - prints an input string
- *@str: the string to be printed
+ *@c_r: the string to be printed
  *
  * Return: Nothing
  */
-void my_puts(char *str)
+void my_puts(char *c_r)
 {
 	int i = 0;
 
-	if (!str)
+	if (!c_r)
 		return;
-	while (str[i] != '\0')
+	while (c_r[i] != '\0')
 	{
-		my_putchar(str[i]);
+		my_putchar(c_r[i]);
 		i++;
 	}
 }

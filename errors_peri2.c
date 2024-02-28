@@ -20,18 +20,18 @@ void pr_erro(form_t *form, char *estr)
 /**
  * pr_int - Function prints a decimal (integer) number (base 10).
  * @input: The input.
- * @file_descriptor: The file descriptor to write to.
+ * @file_d: The file descriptor to write to.
  *
  * Return: Number of characters printed.
  */
-int pr_int(int input, int file_descriptor)
+int pr_int(int input, int file_d)
 {
 	int (*__putchar)(char) = my_putchar;
 	int i, count = 0;
 	unsigned int _abs_, current;
 
-	if (file_descriptor == STDERR_FILENO)
-		__putchar = _error_putchar;
+	if (file_d == STDERR_FILENO)
+		__putchar = my_putchar;
 	if (input < 0)
 	{
 		_abs_ = -input;

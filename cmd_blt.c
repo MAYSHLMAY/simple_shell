@@ -17,7 +17,7 @@ int executable_shell(form_t *form, char **argv)
 		clear_info(form);
 		if (c_promp(form))
 			my_puts("$ ");
-		_error_putchar(B_F);
+		my_putchar(B_F);
 		r = get_input(form);
 		if (r != -1)
 		{
@@ -36,9 +36,9 @@ int executable_shell(form_t *form, char **argv)
 		exit(form->status);
 	if (builtin_ret == -2)
 	{
-		if (form->error_number == -1)
+		if (form->err_num == -1)
 			exit(form->status);
-		exit(form->error_number);
+		exit(form->err_num);
 	}
 	return (builtin_ret);
 }
@@ -61,7 +61,7 @@ int find_builtin(form_t *form)
 		{"history", _myhistory},
 		{"setenv", _mysetenv},
 		{"unsetenv", _myunsetenv},
-		{"cd", _my_current_working_cd_cmd},
+		{"cd", _my_cd_cmd},
 		{"alias", alias_command},
 		{NULL, NULL}
 	};

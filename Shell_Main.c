@@ -29,8 +29,8 @@ int main(int argc, char **argv)
 				_error_puts(argv[0]);
 				_error_puts(": 0: Can't open ");
 				_error_puts(argv[1]);
-				_error_putchar('\n');
-				_error_putchar(B_F);
+				my_putchar('\n');
+				my_putchar(B_F);
 				exit(127);
 			}
 			return (EXIT_FAILURE);

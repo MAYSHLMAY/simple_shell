@@ -26,24 +26,24 @@ char **get_environ(form_t *form)
  */
 int _unsetenv(form_t *form, char *var)
 {
-	list_t *node = form->env;
+	histo_t *nde = form->env;
 	size_t i = 0;
 	char *p;
 
-	if (!node || !var)
+	if (!nde || !var)
 		return (0);
 
-	while (node)
+	while (nde)
 	{
-		p = starts_with(node->str, var);
+		p = starts_with(nde->c_r, var);
 		if (p && *p == '=')
 		{
 			form->env_changed = delete_node_at_index(&(form->env), i);
 			i = 0;
-			node = form->env;
+			nde = form->env;
 			continue;
 		}
-		node = node->next;
+		nde = nde->next;
 		i++;
 	}
 	return (form->env_changed);
@@ -61,7 +61,7 @@ int _unsetenv(form_t *form, char *var)
 int _setenv(form_t *form, char *var, char *value)
 {
 	char *buf = NULL;
-	list_t *node;
+	histo_t *nde;
 	char *p;
 
 	if (!var || !value)
@@ -73,18 +73,18 @@ int _setenv(form_t *form, char *var, char *value)
 	my_strcpy(buf, var);
 	my_strcat(buf, "=");
 	my_strcat(buf, value);
-	node = form->env;
-	while (node)
+	nde = form->env;
+	while (nde)
 	{
-		p = starts_with(node->str, var);
+		p = starts_with(nde->c_r, var);
 		if (p && *p == '=')
 		{
-			free(node->str);
-			node->str = buf;
+			free(nde->c_r);
+			nde->c_r = buf;
 			form->env_changed = 1;
 			return (0);
 		}
-		node = node->next;
+		nde = nde->next;
 	}
 	add_node_end(&(form->env), buf, 0);
 	free(buf);

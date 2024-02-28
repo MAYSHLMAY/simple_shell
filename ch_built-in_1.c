@@ -16,26 +16,26 @@ int shell_exit(form_t *form)
 		if (e_code == -1)
 		{
 			form->status = 2;
-			pr_erro(form, "Illegal number: ");
+			pr_erro(form, ":( ");
 			_error_puts(form->argv[1]);
-			_error_putchar('\n');
+			my_putchar('\n');
 			return (1);
 		}
-		form->error_number = e_code;
+		form->err_num = e_code;
 		return (-2);
 	}
-	form->error_number = -1;
+	form->err_num = -1;
 	return (-2);
 }
 
 /**
- * _my_current_working_cd_cmd - changes the current directory of the process
- * @form: Structure containing potential arguments
+ * _my_cd_cmd - changes the current directory
+ * @form: Structure contains potential args
  *
- * Return: Always 0
+ * Return: Always (0)
  */
 
-int _my_current_working_cd_cmd(form_t *form)
+int _my_cd_cmd(form_t *form)
 {
 	char *cwd, buffer[1024];
 	int chdir_result;
@@ -67,7 +67,7 @@ int _my_current_working_cd_cmd(form_t *form)
 	{
 		pr_erro(form, "can't change directory ");
 		_error_puts(form->argv[1]);
-		_error_putchar('\n');
+		my_putchar('\n');
 	}
 	else
 	{

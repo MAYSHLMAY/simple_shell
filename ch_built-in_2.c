@@ -4,22 +4,22 @@
 /**
  * unset_alias - sets alias to string
  * @form: parameter struct
- * @str: the string alias
+ * @c_r: the string alias
  *
  * Return: Always 0 on success, 1 on error
  */
-int unset_alias(form_t *form, char *str)
+int unset_alias(form_t *form, char *c_r)
 {
 	char *p, c;
 	int ret;
 
-	p = my_strchr(str, '=');
+	p = my_strchr(c_r, '=');
 	if (!p)
 		return (1);
 	c = *p;
 	*p = 0;
 	ret = delete_node_at_index(&(form->alias),
-		get_node_index(form->alias, node_starts_with(form->alias, str, -1)));
+		get_node_index(form->alias, node_starts_with(form->alias, c_r, -1)));
 	*p = c;
 	return (ret);
 }
@@ -27,38 +27,38 @@ int unset_alias(form_t *form, char *str)
 /**
  * set_alias - sets alias to string
  * @form: parameter struct
- * @str: the string alias
+ * @c_r: the string alias
  *
  * Return: Always 0 on success, 1 on error
  */
-int set_alias(form_t *form, char *str)
+int set_alias(form_t *form, char *c_r)
 {
 	char *p;
 
-	p = my_strchr(str, '=');
+	p = my_strchr(c_r, '=');
 	if (!p)
 		return (1);
 	if (!*++p)
-		return (unset_alias(form, str));
+		return (unset_alias(form, c_r));
 
-	unset_alias(form, str);
-	return (add_node_end(&(form->alias), str, 0) == NULL);
+	unset_alias(form, c_r);
+	return (add_node_end(&(form->alias), c_r, 0) == NULL);
 }
 
 /**
  * print_alias - prints an alias string
- * @node: the alias node
+ * @nde: the alias nde
  *
  * Return: Always 0 on success, 1 on error
  */
-int print_alias(list_t *node)
+int print_alias(histo_t *nde)
 {
 	char *p = NULL, *a = NULL;
 
-	if (node)
+	if (nde)
 	{
-		p = my_strchr(node->str, '=');
-		for (a = node->str; a <= p; a++)
+		p = my_strchr(nde->c_r, '=');
+		for (a = nde->c_r; a <= p; a++)
 			my_putchar(*a);
 		my_putchar('\'');
 		my_puts(p + 1);
@@ -78,15 +78,15 @@ int alias_command(form_t *form)
 {
 	int i = 0;
 	char *p = NULL;
-	list_t *node = NULL;
+	histo_t *nde = NULL;
 
 	if (form->argc == 1)
 	{
-		node = form->alias;
-		while (node)
+		nde = form->alias;
+		while (nde)
 		{
-			print_alias(node);
-			node = node->next;
+			print_alias(nde);
+			nde = nde->next;
 		}
 		return (0);
 	}

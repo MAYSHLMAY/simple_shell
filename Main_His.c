@@ -34,7 +34,7 @@ int write_history(form_t *form)
 {
 	ssize_t fd;
 	char *filename = get_history_file(form);
-	list_t *node = NULL;
+	histo_t *nde = NULL;
 
 	if (!filename)
 		return (-1);
@@ -43,9 +43,9 @@ int write_history(form_t *form)
 	free(filename);
 	if (fd == -1)
 		return (-1);
-	for (node = form->history; node; node = node->next)
+	for (nde = form->history; nde; nde = nde->next)
 	{
-		_puts_filed(node->str, fd);
+		_puts_filed(nde->c_r, fd);
 		_putfile_d('\n', fd);
 	}
 	_putfile_d(B_F, fd);
@@ -112,14 +112,14 @@ int read_history(form_t *form)
  */
 int build_history_list(form_t *form, char *buf, int linecount)
 {
-	list_t *node = NULL;
+	histo_t *nde = NULL;
 
 	if (form->history)
-		node = form->history;
-	add_node_end(&node, buf, linecount);
+		nde = form->history;
+	add_node_end(&nde, buf, linecount);
 
 	if (!form->history)
-		form->history = node;
+		form->history = nde;
 	return (0);
 }
 
@@ -131,13 +131,13 @@ int build_history_list(form_t *form, char *buf, int linecount)
  */
 int renumber_history(form_t *form)
 {
-	list_t *node = form->history;
+	histo_t *nde = form->history;
 	int i = 0;
 
-	while (node)
+	while (nde)
 	{
-		node->num = i++;
-		node = node->next;
+		nde->num = i++;
+		nde = nde->next;
 	}
 	return (form->histcount = i);
 }

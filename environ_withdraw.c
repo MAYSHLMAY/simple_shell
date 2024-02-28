@@ -21,15 +21,15 @@ int _myenv(form_t *form)
  */
 char *_getenv(form_t *form, const char *name)
 {
-	list_t *node = form->env;
+	histo_t *nde = form->env;
 	char *p;
 
-	while (node)
+	while (nde)
 	{
-		p = starts_with(node->str, name);
+		p = starts_with(nde->c_r, name);
 		if (p && *p)
 			return (p);
-		node = node->next;
+		nde = nde->next;
 	}
 	return (NULL);
 }
@@ -82,11 +82,11 @@ int _myunsetenv(form_t *form)
  */
 int populate_env_list(form_t *form)
 {
-	list_t *node = NULL;
+	histo_t *nde = NULL;
 	size_t i;
 
 	for (i = 0; environ[i]; i++)
-		add_node_end(&node, environ[i], 0);
-	form->env = node;
+		add_node_end(&nde, environ[i], 0);
+	form->env = nde;
 	return (0);
 }

@@ -43,16 +43,16 @@ void check_chain(form_t *form, char *buf, size_t *p, size_t i, size_t len)
 int replace_alias(form_t *form)
 {
 	int i;
-	list_t *node;
+	histo_t *nde;
 	char *p;
 
 	for (i = 0; i < 10; i++)
 	{
-		node = node_starts_with(form->alias, form->argv[0], '=');
-		if (!node)
+		nde = node_starts_with(form->alias, form->argv[0], '=');
+		if (!nde)
 			return (0);
 		free(form->argv[0]);
-		p = my_strchr(node->str, '=');
+		p = my_strchr(nde->c_r, '=');
 		if (!p)
 			return (0);
 		p = my_strdup(p + 1);
@@ -72,7 +72,7 @@ int replace_alias(form_t *form)
 int replace_vars(form_t *form)
 {
 	int i = 0;
-	list_t *node;
+	histo_t *nde;
 
 	for (i = 0; form->argv[i]; i++)
 	{
@@ -91,11 +91,11 @@ int replace_vars(form_t *form)
 				my_strdup(convert_number(getpid(), 10, 0)));
 			continue;
 		}
-		node = node_starts_with(form->env, &form->argv[i][1], '=');
-		if (node)
+		nde = node_starts_with(form->env, &form->argv[i][1], '=');
+		if (nde)
 		{
 			replace_string(&(form->argv[i]),
-				my_strdup(my_strchr(node->str, '=') + 1));
+				my_strdup(my_strchr(nde->c_r, '=') + 1));
 			continue;
 		}
 		replace_string(&form->argv[i], my_strdup(""));
