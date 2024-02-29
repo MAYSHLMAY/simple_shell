@@ -104,21 +104,15 @@ char *my_strdup(const char *);
 void my_puts(char *);
 int my_putchar(char);
 
-/* toem_exits.c */
 char *my_strncpy(char *, char *, int);
 char *my_strncat(char *, char *, int);
 char *my_strchr(char *, char);
 
-/* toem_tokenizer.c */
 char **strtow(char *, char *);
-char **strtow2(char *, char);
 
-/* toem_realloc.c */
 char *_memset(char *, char, unsigned int);
 void free_string_array(char **);
 void *_realloc(void *, unsigned int, unsigned int);
-
-/* toem_memory.c */
 int free_and_null(void **);
 
 int c_promp(form_t *);
@@ -147,13 +141,13 @@ void clear_info(form_t *);
 void set_info(form_t *, char **);
 void free_info(form_t *, int);
 
-char *_getenv(form_t *, const char *);
+char *my_getenv(form_t *, const char *);
 int _myenv(form_t *);
 int _mysetenv(form_t *);
 int _myunsetenv(form_t *);
 int populate_env_list(form_t *);
 
-/* toem_getenv.c */
+/* toemmy_getenv.c */
 char **get_environ(form_t *);
 int _unsetenv(form_t *, char *);
 int _setenv(form_t *, char *, char *);

@@ -62,7 +62,6 @@ int find_builtin(form_t *form)
 		{"setenv", _mysetenv},
 		{"unsetenv", _myunsetenv},
 		{"cd", _my_cd_cmd},
-		{"alias", alias_command},
 		{NULL, NULL}
 	};
 
@@ -99,7 +98,7 @@ void find_cmd(form_t *form)
 	if (!k)
 		return;
 
-	path = find_path(form, _getenv(form, "PATH="), form->argv[0]);
+	path = find_path(form, my_getenv(form, "PATH="), form->argv[0]);
 	if (path)
 	{
 		form->path = path;
@@ -107,7 +106,7 @@ void find_cmd(form_t *form)
 	}
 	else
 	{
-		if ((c_promp(form) || _getenv(form, "PATH=")
+		if ((c_promp(form) || my_getenv(form, "PATH=")
 			|| form->argv[0][0] == '/') && is_cmd(form, form->argv[0]))
 			fork_cmd(form);
 		else if (*(form->arg) != '\n')

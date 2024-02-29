@@ -34,34 +34,6 @@ void check_chain(form_t *form, char *buf, size_t *p, size_t i, size_t len)
 	*p = j;
 }
 
-/**
- * replace_alias - replaces an aliases in the tokenized string
- * @form: the parameter struct
- *
- * Return: 1 if replaced, 0 otherwise
- */
-int replace_alias(form_t *form)
-{
-	int i;
-	histo_t *nde;
-	char *p;
-
-	for (i = 0; i < 10; i++)
-	{
-		nde = node_starts_with(form->alias, form->argv[0], '=');
-		if (!nde)
-			return (0);
-		free(form->argv[0]);
-		p = my_strchr(nde->c_r, '=');
-		if (!p)
-			return (0);
-		p = my_strdup(p + 1);
-		if (!p)
-			return (0);
-		form->argv[0] = p;
-	}
-	return (1);
-}
 
 /**
  * replace_vars - replaces vars in the tokenized string

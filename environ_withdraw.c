@@ -13,13 +13,13 @@ int _myenv(form_t *form)
 }
 
 /**
- * _getenv - gets the value of an environ variable
+ * my_getenv - gets the value of an environ variable
  * @form: Structure containing potential arguments. Used to maintain
  * @name: env var name
  *
  * Return: the value
  */
-char *_getenv(form_t *form, const char *name)
+char *my_getenv(form_t *form, const char *name)
 {
 	histo_t *nde = form->env;
 	char *p;
@@ -45,7 +45,7 @@ int _mysetenv(form_t *form)
 {
 	if (form->argc != 3)
 	{
-		_error_puts("Incorrect number of arguements\n");
+		_error_puts("Incorrect Num of args\n");
 		return (1);
 	}
 	if (_setenv(form, form->argv[1], form->argv[2]))

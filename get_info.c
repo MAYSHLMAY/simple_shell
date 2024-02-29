@@ -39,7 +39,6 @@ void set_info(form_t *form, char **argv)
 			;
 		form->argc = i;
 
-		replace_alias(form);
 		replace_vars(form);
 	}
 }
@@ -62,8 +61,6 @@ void free_info(form_t *form, int all)
 			free_list(&(form->env));
 		if (form->history)
 			free_list(&(form->history));
-		if (form->alias)
-			free_list(&(form->alias));
 		free_string_array(form->environ);
 			form->environ = NULL;
 		free_and_null((void **)form->cmd_buf);

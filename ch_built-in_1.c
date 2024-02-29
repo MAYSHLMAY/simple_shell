@@ -43,22 +43,22 @@ int _my_cd_cmd(form_t *form)
 	cwd = getcwd(buffer, 1024);
 	if (!form->argv[1])
 	{
-		if (_getenv(form, "HOME="))
-			chdir_result = chdir(_getenv(form, "HOME="));
+		if (my_getenv(form, "HOME="))
+			chdir_result = chdir(my_getenv(form, "HOME="));
 		else
 			chdir_result = chdir("/");
 	}
 	else if (my_strcmp(form->argv[1], "-") == 0)
 	{
-		if (!_getenv(form, "OLDPWD="))
+		if (!my_getenv(form, "OLDPWD="))
 		{
 			my_puts(cwd);
 			my_putchar('\n');
 			return (1);
 		}
-		my_puts(_getenv(form, "OLDPWD="));
+		my_puts(my_getenv(form, "OLDPWD="));
 		my_putchar('\n');
-		chdir_result = chdir(_getenv(form, "OLDPWD="));
+		chdir_result = chdir(my_getenv(form, "OLDPWD="));
 	}
 	else
 		chdir_result = chdir(form->argv[1]);
@@ -71,7 +71,7 @@ int _my_cd_cmd(form_t *form)
 	}
 	else
 	{
-		_setenv(form, "OLDPWD", _getenv(form, "PWD="));
+		_setenv(form, "OLDPWD", my_getenv(form, "PWD="));
 		_setenv(form, "PWD", getcwd(buffer, 1024));
 	}
 	return (0);

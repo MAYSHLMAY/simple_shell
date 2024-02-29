@@ -11,7 +11,7 @@ char *get_history_file(form_t *form)
 {
 	char *buf, *dir;
 
-	dir = _getenv(form, "HOME=");
+	dir = my_getenv(form, "HOME=");
 	if (!dir)
 		return (NULL);
 	buf = malloc(sizeof(char) * (my_strlen(dir) + my_strlen(H_FILE) + 2));
