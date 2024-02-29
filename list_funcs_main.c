@@ -82,16 +82,16 @@ histo_t *add_node_end(histo_t **head, const char *c_r, int num)
  */
 size_t print_list_str(const histo_t *h)
 {
-	size_t i = 0;
+	size_t p1 = 0;
 
 	while (h)
 	{
 		my_puts(h->c_r ? h->c_r : "(nil)");
 		my_puts("\n");
 		h = h->next;
-		i++;
+		p1++;
 	}
-	return (i);
+	return (p1);
 }
 
 /**
@@ -104,7 +104,7 @@ size_t print_list_str(const histo_t *h)
 int delete_node_at_index(histo_t **head, unsigned int index)
 {
 	histo_t *nde, *prev_node;
-	unsigned int i = 0;
+	unsigned int p1 = 0;
 
 	if (!head || !*head)
 		return (0);
@@ -120,14 +120,14 @@ int delete_node_at_index(histo_t **head, unsigned int index)
 	nde = *head;
 	while (nde)
 	{
-		if (i == index)
+		if (p1 == index)
 		{
 			prev_node->next = nde->next;
 			free(nde->c_r);
 			free(nde);
 			return (1);
 		}
-		i++;
+		p1++;
 		prev_node = nde;
 		nde = nde->next;
 	}

@@ -11,30 +11,30 @@
 char *duplicate_chars(char *pathstr, int start, int stop)
 {
 	static char buffer[1024];
-	int i = 0, k = 0;
+	int p1 = 0, p3 = 0;
 
-	for (k = 0, i = start; i < stop; i++)
-		if (pathstr[i] != ':')
+	for (p3 = 0, p1 = start; p1 < stop; p1++)
+		if (pathstr[p1] != ':')
 		{
-			buffer[k++] = pathstr[i];
-			buffer[k] = 0;
+			buffer[p3++] = pathstr[p1];
+			buffer[p3] = 0;
 		}
 	return (buffer);
 }
 
 /**
  * is_cmd - determines if a file is an executable command
- * @form: pointer to the form struct
+ * @fm: pointer to the fm struct
  * @path: path to the file
  *
  * Return: 1 if true, 0 otherwise
  */
 
-int is_cmd(form_t *form, char *path)
+int is_cmd(flex_t *fm, char *path)
 {
 	struct stat file_stat;
 
-	(void)form;
+	(void)fm;
 	if (!path || stat(path, &file_stat))
 		return (0);
 
@@ -44,30 +44,30 @@ int is_cmd(form_t *form, char *path)
 }
 
 /**
- * find_path - finds the command's full path in the PATH string
- * @form: pointer to the form struct
+ * find_path - finds the command's
+ * @fm: pointer to the fm struct
  * @pathstr: the PATH string
  * @cmd: the command to find
  *
  * Return: full path of the command if found, or NULL
  */
-char *find_path(form_t *form, char *pathstr, char *cmd)
+char *find_path(flex_t *fm, char *pathstr, char *cmd)
 {
-	int i = 0, curr_pos = 0;
+	int p1 = 0, curr_pos = 0;
 	char *path;
 
 	if (!pathstr)
 		return (NULL);
 	if ((my_strlen(cmd) > 2) && starts_with(cmd, "./"))
 	{
-		if (is_cmd(form, cmd))
+		if (is_cmd(fm, cmd))
 			return (cmd);
 	}
 	while (1)
 	{
-		if (!pathstr[i] || pathstr[i] == ':')
+		if (!pathstr[p1] || pathstr[p1] == ':')
 		{
-			path = duplicate_chars(pathstr, curr_pos, i);
+			path = duplicate_chars(pathstr, curr_pos, p1);
 			if (!*path)
 				my_strcat(path, cmd);
 			else
@@ -75,13 +75,13 @@ char *find_path(form_t *form, char *pathstr, char *cmd)
 				my_strcat(path, "/");
 				my_strcat(path, cmd);
 			}
-			if (is_cmd(form, path))
+			if (is_cmd(fm, path))
 				return (path);
-			if (!pathstr[i])
+			if (!pathstr[p1])
 				break;
-			curr_pos = i;
+			curr_pos = p1;
 		}
-		i++;
+		p1++;
 	}
 	return (NULL);
 }

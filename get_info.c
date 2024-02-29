@@ -1,71 +1,71 @@
 #include "headers/Shell_Header.h"
 
 /**
- * clear_info - initializes form_t struct
- * @form: struct address
+ * clear_info - initializes flex_t struct
+ * @fm: struct address
  */
-void clear_info(form_t *form)
+void clear_info(flex_t *fm)
 {
-	form->arg = NULL;
-	form->argv = NULL;
-	form->path = NULL;
-	form->argc = 0;
+	fm->arg = NULL;
+	fm->arg_o_v = NULL;
+	fm->path = NULL;
+	fm->argc = 0;
 }
 
 /**
- * set_info - initializes form_t struct
- * @form: struct address
- * @argv: argument vector
+ * set_info - initializes flex_t struct
+ * @fm: struct address
+ * @arg_o_v: argument vector
  */
-void set_info(form_t *form, char **argv)
+void set_info(flex_t *fm, char **arg_o_v)
 {
-	int i = 0;
+	int p1 = 0;
 
-	form->fname = argv[0];
-	if (form->arg)
+	fm->fname = arg_o_v[0];
+	if (fm->arg)
 	{
-		form->argv = strtow(form->arg, " \t");
-		if (!form->argv)
+		fm->arg_o_v = my_spx(fm->arg, " \t");
+		if (!fm->arg_o_v)
 		{
 
-			form->argv = malloc(sizeof(char *) * 2);
-			if (form->argv)
+			fm->arg_o_v = malloc(sizeof(char *) * 2);
+			if (fm->arg_o_v)
 			{
-				form->argv[0] = my_strdup(form->arg);
-				form->argv[1] = NULL;
+				fm->arg_o_v[0] = my_strdup(fm->arg);
+				fm->arg_o_v[1] = NULL;
 			}
 		}
-		for (i = 0; form->argv && form->argv[i]; i++)
+		for (p1 = 0; fm->arg_o_v && fm->arg_o_v[p1]; p1++)
 			;
-		form->argc = i;
+		fm->argc = p1;
 
-		replace_vars(form);
+		replace_vars(fm);
 	}
 }
 
 /**
- * free_info - frees form_t struct fields
- * @form: struct address
+ * free_info - frees flex_t struct fields
+ * @fm: struct address
  * @all: true if freeing all fields
  */
-void free_info(form_t *form, int all)
+void free_info(flex_t *fm, int all)
 {
-	free_string_array(form->argv);
-	form->argv = NULL;
-	form->path = NULL;
+	free_string_array(fm->arg_o_v);
+	fm->arg_o_v = NULL;
+	fm->path = NULL;
 	if (all)
 	{
-		if (!form->cmd_buf)
-			free(form->arg);
-		if (form->env)
-			free_list(&(form->env));
-		if (form->history)
-			free_list(&(form->history));
-		free_string_array(form->environ);
-			form->environ = NULL;
-		free_and_null((void **)form->cmd_buf);
-		if (form->readfd > 2)
-			close(form->readfd);
+		if (!fm->cmd_buf)
+			free(fm->arg);
+		if (fm->env)
+			free_list(&(fm->env));
+		if (fm->history)
+			free_list(&(fm->history));
+		free_string_array(fm->environ);
+			fm->environ = NULL;
+		free_and_null((void **)fm->cmd_buf);
+		if (fm->readfd > 2)
+			close(fm->readfd);
 		my_putchar(B_F);
 	}
 }
@@ -80,15 +80,15 @@ void free_info(form_t *form, int all)
 
 int my_putchar(char c)
 {
-	static int i;
+	static int p1;
 	static char buf[W_B_S];
 
-	if (c == B_F || i >= W_B_S)
+	if (c == B_F || p1 >= W_B_S)
 	{
-		write(1, buf, i);
-		i = 0;
+		write(1, buf, p1);
+		p1 = 0;
 	}
 	if (c != B_F)
-		buf[i++] = c;
+		buf[p1++] = c;
 	return (1);
 }

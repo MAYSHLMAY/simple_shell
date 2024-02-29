@@ -2,16 +2,16 @@
 
 /**
  * get_history_file - gets the history file
- * @form: parameter struct
+ * @fm: parameter struct
  *
  * Return: allocated string containg history file
  */
 
-char *get_history_file(form_t *form)
+char *get_history_file(flex_t *fm)
 {
 	char *buf, *dir;
 
-	dir = my_getenv(form, "HOME=");
+	dir = my_getenv(fm, "HOME=");
 	if (!dir)
 		return (NULL);
 	buf = malloc(sizeof(char) * (my_strlen(dir) + my_strlen(H_FILE) + 2));
@@ -26,14 +26,14 @@ char *get_history_file(form_t *form)
 
 /**
  * write_history - creates a file, or appends to an existing file
- * @form: the parameter struct
+ * @fm: the parameter struct
  *
  * Return: 1 on success, else -1
  */
-int write_history(form_t *form)
+int write_history(flex_t *fm)
 {
 	ssize_t fd;
-	char *filename = get_history_file(form);
+	char *filename = get_history_file(fm);
 	histo_t *nde = NULL;
 
 	if (!filename)
@@ -43,7 +43,7 @@ int write_history(form_t *form)
 	free(filename);
 	if (fd == -1)
 		return (-1);
-	for (nde = form->history; nde; nde = nde->next)
+	for (nde = fm->history; nde; nde = nde->next)
 	{
 		_puts_filed(nde->c_r, fd);
 		_putfile_d('\n', fd);
@@ -55,16 +55,16 @@ int write_history(form_t *form)
 
 /**
  * read_history - reads history from file
- * @form: the parameter struct
+ * @fm: the parameter struct
  *
  * Return: histcount on success, 0 otherwise
  */
-int read_history(form_t *form)
+int read_history(flex_t *fm)
 {
-	int i, last = 0, linecount = 0;
+	int p1, last = 0, linecount = 0;
 	ssize_t fd, rdlen, fsize = 0;
 	struct stat st;
-	char *buf = NULL, *filename = get_history_file(form);
+	char *buf = NULL, *filename = get_history_file(fm);
 
 	if (!filename)
 		return (0);
@@ -85,59 +85,59 @@ int read_history(form_t *form)
 	if (rdlen <= 0)
 		return (free(buf), 0);
 	close(fd);
-	for (i = 0; i < fsize; i++)
-		if (buf[i] == '\n')
+	for (p1 = 0; p1 < fsize; p1++)
+		if (buf[p1] == '\n')
 		{
-			buf[i] = 0;
-			build_history_list(form, buf + last, linecount++);
-			last = i + 1;
+			buf[p1] = 0;
+			build_history_list(fm, buf + last, linecount++);
+			last = p1 + 1;
 		}
-	if (last != i)
-		build_history_list(form, buf + last, linecount++);
+	if (last != p1)
+		build_history_list(fm, buf + last, linecount++);
 	free(buf);
-	form->histcount = linecount;
-	while (form->histcount-- >= H_MAX)
-		delete_node_at_index(&(form->history), 0);
-	renumber_history(form);
-	return (form->histcount);
+	fm->histcount = linecount;
+	while (fm->histcount-- >= H_MAX)
+		delete_node_at_index(&(fm->history), 0);
+	renumber_history(fm);
+	return (fm->histcount);
 }
 
 /**
  * build_history_list - adds entry to a history linked list
- * @form: Structure containing potential arguments. Used to maintain
+ * @fm: Structure containing potential arguments. Used to maintain
  * @buf: buffer
  * @linecount: the history linecount, histcount
  *
  * Return: Always 0
  */
-int build_history_list(form_t *form, char *buf, int linecount)
+int build_history_list(flex_t *fm, char *buf, int linecount)
 {
 	histo_t *nde = NULL;
 
-	if (form->history)
-		nde = form->history;
+	if (fm->history)
+		nde = fm->history;
 	add_node_end(&nde, buf, linecount);
 
-	if (!form->history)
-		form->history = nde;
+	if (!fm->history)
+		fm->history = nde;
 	return (0);
 }
 
 /**
  * renumber_history - renumbers the history linked list after changes
- * @form: Structure containing potential arguments. Used to maintain
+ * @fm: Structure containing potential arguments. Used to maintain
  *
  * Return: the new histcount
  */
-int renumber_history(form_t *form)
+int renumber_history(flex_t *fm)
 {
-	histo_t *nde = form->history;
-	int i = 0;
+	histo_t *nde = fm->history;
+	int p1 = 0;
 
 	while (nde)
 	{
-		nde->num = i++;
+		nde->num = p1++;
 		nde = nde->next;
 	}
-	return (form->histcount = i);
+	return (fm->histcount = p1);
 }

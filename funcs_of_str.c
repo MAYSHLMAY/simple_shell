@@ -29,11 +29,11 @@ int my_strcmp(char *s1, char *s2)
  */
 int my_strlen(char *s)
 {
-	int len = 0;
+	int lenz = 0;
 
 	while (*s++)
-		len++;
-	return (len);
+		lenz++;
+	return (lenz);
 }
 
 /**
@@ -88,19 +88,19 @@ char *my_strcat(char *dest, char *src)
 char *my_strncpy(char *dest, char *src, int n)
 {
 	char *ptr = dest;
-	int i;
+	int p1;
 
-	for (i = 0; i < n && *src != '\0'; i++)
+	for (p1 = 0; p1 < n && *src != '\0'; p1++)
 	{
 		*ptr = *src;
 		ptr++;
 		src++;
 	}
-	while (i < n)
+	while (p1 < n)
 	{
 		*ptr = '\0';
 		ptr++;
-		i++;
+		p1++;
 	}
 	return (dest);
 }

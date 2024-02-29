@@ -2,67 +2,67 @@
 
 /**
  * get_environ - returns the string array copy of our environ
- * @form: Structure containing potential arguments. Used to maintain
+ * @fm: Structure containing potential arguments. Used to maintain
  *          constant function prototype.
  * Return: Always 0
  */
-char **get_environ(form_t *form)
+char **get_environ(flex_t *fm)
 {
-	if (!form->environ || form->env_changed)
+	if (!fm->environ || fm->env_changed)
 	{
-		form->environ = list_to_strings(form->env);
-		form->env_changed = 0;
+		fm->environ = list_to_strings(fm->env);
+		fm->env_changed = 0;
 	}
 
-	return (form->environ);
+	return (fm->environ);
 }
 
 /**
  * _unsetenv - Remove an environment variable
- * @form: Structure containing potential arguments. Used to maintain
+ * @fm: Structure containing potential arguments. Used to maintain
  *        constant function prototype.
  *  Return: 1 on delete, 0 otherwise
  * @var: the string env var property
  */
-int _unsetenv(form_t *form, char *var)
+int _unsetenv(flex_t *fm, char *var)
 {
-	histo_t *nde = form->env;
-	size_t i = 0;
-	char *p;
+	histo_t *nde = fm->env;
+	size_t p1 = 0;
+	char *par;
 
 	if (!nde || !var)
 		return (0);
 
 	while (nde)
 	{
-		p = starts_with(nde->c_r, var);
-		if (p && *p == '=')
+		par = starts_with(nde->c_r, var);
+		if (par && *par == '=')
 		{
-			form->env_changed = delete_node_at_index(&(form->env), i);
-			i = 0;
-			nde = form->env;
+			fm->env_changed = delete_node_at_index(&(fm->env), p1);
+			p1 = 0;
+			nde = fm->env;
 			continue;
 		}
 		nde = nde->next;
-		i++;
+		p1++;
 	}
-	return (form->env_changed);
+	return (fm->env_changed);
 }
 
 /**
  * _setenv - Initialize a new environment variable,
  *             or modify an existing one
- * @form: Structure containing potential arguments. Used to maintain
+ * @fm: Structure containing potential arguments. Used to maintain
  *        constant function prototype.
  * @var: the string env var property
  * @value: the string env var value
  *  Return: Always 0
  */
-int _setenv(form_t *form, char *var, char *value)
+int _setenv(flex_t *fm, char *var, char *value)
 {
 	char *buf = NULL;
 	histo_t *nde;
-	char *p;
+	char *par;
 
 	if (!var || !value)
 		return (0);
@@ -73,21 +73,21 @@ int _setenv(form_t *form, char *var, char *value)
 	my_strcpy(buf, var);
 	my_strcat(buf, "=");
 	my_strcat(buf, value);
-	nde = form->env;
+	nde = fm->env;
 	while (nde)
 	{
-		p = starts_with(nde->c_r, var);
-		if (p && *p == '=')
+		par = starts_with(nde->c_r, var);
+		if (par && *par == '=')
 		{
 			free(nde->c_r);
 			nde->c_r = buf;
-			form->env_changed = 1;
+			fm->env_changed = 1;
 			return (0);
 		}
 		nde = nde->next;
 	}
-	add_node_end(&(form->env), buf, 0);
+	add_node_end(&(fm->env), buf, 0);
 	free(buf);
-	form->env_changed = 1;
+	fm->env_changed = 1;
 	return (0);
 }

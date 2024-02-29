@@ -1,60 +1,60 @@
 #include "headers/Shell_Header.h"
 
 /**
- * executable_shell - main shell loop
- * @form: the parameter & return form struct
- * @argv: the argument vector from main()
- *
- * Return: 0 on success, 1 on error, or error code
+ * exe_shell - main shell loop
+ * @fm: the parameter & return fm struct
+ * @arg_o_v: the argument vector from main()
+ * Return: 0 / 1
  */
-int executable_shell(form_t *form, char **argv)
+int exe_shell(flex_t *fm, char **arg_o_v)
 {
-	ssize_t r = 0;
-	int builtin_ret = 0;
+	ssize_t rms;
+	int bt_ret = 0;
 
-	while (r != -1 && builtin_ret != -2)
+	for (rms = 0; rms != -1 && bt_ret != -2;)
 	{
-		clear_info(form);
-		if (c_promp(form))
+		clear_info(fm);
+		if (c_promp(fm))
 			my_puts("$ ");
 		my_putchar(B_F);
-		r = get_input(form);
-		if (r != -1)
+		rms = get_input(fm);
+		if (rms != -1)
 		{
-			set_info(form, argv);
-			builtin_ret = find_builtin(form);
-			if (builtin_ret == -1)
-				find_cmd(form);
+			set_info(fm, arg_o_v);
+			bt_ret = find_builtin(fm);
+			if (bt_ret == -1)
+				find_cmd(fm);
+			free_info(fm, 0);
 		}
-		else if (c_promp(form))
+		else if (c_promp(fm))
 			my_putchar('\n');
-		free_info(form, 0);
 	}
-	write_history(form);
-	free_info(form, 1);
-	if (!c_promp(form) && form->status)
-		exit(form->status);
-	if (builtin_ret == -2)
+
+	write_history(fm);
+	free_info(fm, 1);
+	if (!c_promp(fm) && fm->status)
+		exit(fm->status);
+	if (bt_ret == -2)
 	{
-		if (form->err_num == -1)
-			exit(form->status);
-		exit(form->err_num);
+		if (fm->err_num == -1)
+			exit(fm->status);
+		exit(fm->err_num);
 	}
-	return (builtin_ret);
+	return (bt_ret);
 }
 
 /**
- * find_builtin - finds a builtin command
- * @form: the parameter & return form struct
+ * find_builtin - finds a builtin
+ * @fm: the parameter & return fm struct
  *
- * Return: -1 if builtin not found,
- *			0 if builtin executed successfully,
- *			1 if builtin found but not successful,
- *			-2 if builtin signals exit()
+ * Return: -1 if not found,
+ *			0 if executed successfully,
+ *			1 if found but not successful,
+ *			-2 if exit()
  */
-int find_builtin(form_t *form)
+int find_builtin(flex_t *fm)
 {
-	int i, built_in_ret = -1;
+	int p1, built_in_ret = -1;
 	builtin_table builtintbl[] = {
 		{"exit", shell_exit},
 		{"env", _myenv},
@@ -65,11 +65,11 @@ int find_builtin(form_t *form)
 		{NULL, NULL}
 	};
 
-	for (i = 0; builtintbl[i].type; i++)
-		if (my_strcmp(form->argv[0], builtintbl[i].type) == 0)
+	for (p1 = 0; builtintbl[p1].type; p1++)
+		if (my_strcmp(fm->arg_o_v[0], builtintbl[p1].type) == 0)
 		{
-			form->line_count++;
-			built_in_ret = builtintbl[i].func(form);
+			fm->line_count++;
+			built_in_ret = builtintbl[p1].func(fm);
 			break;
 		}
 	return (built_in_ret);
@@ -77,53 +77,62 @@ int find_builtin(form_t *form)
 
 /**
  * find_cmd - finds a command in PATH
- * @form: the parameter & return form struct
+ * @fm: the parameter & return fm struct
  *
  * Return: void
  */
-void find_cmd(form_t *form)
+void find_cmd(flex_t *fm)
 {
 	char *path = NULL;
-	int i, k;
+	int p1, p3;
 
-	form->path = form->argv[0];
-	if (form->linecount_flag == 1)
+	fm->path = fm->arg_o_v[0];
+	if (fm->linecount_flag == 1)
 	{
-		form->line_count++;
-		form->linecount_flag = 0;
+		fm->line_count++;
+		fm->linecount_flag = 0;
 	}
-	for (i = 0, k = 0; form->arg[i]; i++)
-		if (!is_delimiter(form->arg[i], " \t\n"))
-			k++;
-	if (!k)
+	for (p1 = 0, p3 = 0; fm->arg[p1]; p1++)
+		if (!ch_del(fm->arg[p1], " \t\n"))
+			p3++;
+	if (!p3)
 		return;
-
-	path = find_path(form, my_getenv(form, "PATH="), form->argv[0]);
+	path = find_path(fm, my_getenv(fm, "PATH="), fm->arg_o_v[0]);
 	if (path)
 	{
-		form->path = path;
-		fork_cmd(form);
+		fm->path = path;
+		fork_cmd(fm);
 	}
 	else
 	{
-		if ((c_promp(form) || my_getenv(form, "PATH=")
-			|| form->argv[0][0] == '/') && is_cmd(form, form->argv[0]))
-			fork_cmd(form);
-		else if (*(form->arg) != '\n')
+		int cs = c_promp(fm) || my_getenv(fm, "PATH=") || fm->arg_o_v[0][0] == '/';
+
+		switch (cs)
 		{
-			form->status = 127;
-			pr_erro(form, "not found:(\n");
+			case 1:
+				if (is_cmd(fm, fm->arg_o_v[0]))
+					fork_cmd(fm);
+				break;
+			case 0:
+				if (*(fm->arg) != '\n')
+				{
+					fm->status = 127;
+					pr_erro(fm, "not found:(\n");
+				}
+				break;
+			default:
+				break;
 		}
 	}
 }
 
 /**
  * fork_cmd - forks a an exec thread to run cmd
- * @form: the parameter & return form struct
+ * @fm: the parameter & return fm struct
  *
  * Return: void
  */
-void fork_cmd(form_t *form)
+void fork_cmd(flex_t *fm)
 {
 	pid_t child_pid;
 
@@ -136,9 +145,9 @@ void fork_cmd(form_t *form)
 	}
 	if (child_pid == 0)
 	{
-		if (execve(form->path, form->argv, get_environ(form)) == -1)
+		if (execve(fm->path, fm->arg_o_v, get_environ(fm)) == -1)
 		{
-			free_info(form, 1);
+			free_info(fm, 1);
 			if (errno == EACCES)
 				exit(126);
 			exit(1);
@@ -146,12 +155,12 @@ void fork_cmd(form_t *form)
 	}
 	else
 	{
-		wait(&(form->status));
-		if (WIFEXITED(form->status))
+		wait(&(fm->status));
+		if (WIFEXITED(fm->status))
 		{
-			form->status = WEXITSTATUS(form->status);
-			if (form->status == 126)
-				pr_erro(form, "Permission denied\n");
+			fm->status = WEXITSTATUS(fm->status);
+			if (fm->status == 126)
+				pr_erro(fm, "Permission denied\n");
 		}
 	}
 }

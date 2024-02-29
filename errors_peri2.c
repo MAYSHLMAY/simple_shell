@@ -1,18 +1,18 @@
 #include "headers/Shell_Header.h"
 /**
  * pr_erro - Prints an error message.
- * @form: The parameter & return form struct.
+ * @fm: The parameter & return fm struct.
  * @estr: String containing specified error type.
  *
  * Return: Nothing.
  */
-void pr_erro(form_t *form, char *estr)
+void pr_erro(flex_t *fm, char *estr)
 {
-	_error_puts(form->fname);
+	_error_puts(fm->fname);
 	_error_puts(": ");
-	pr_int(form->line_count, STDERR_FILENO);
+	pr_int(fm->line_count, STDERR_FILENO);
 	_error_puts(": ");
-	_error_puts(form->argv[0]);
+	_error_puts(fm->arg_o_v[0]);
 	_error_puts(": ");
 	_error_puts(estr);
 }
@@ -27,7 +27,7 @@ void pr_erro(form_t *form, char *estr)
 int pr_int(int input, int file_d)
 {
 	int (*__putchar)(char) = my_putchar;
-	int i, count = 0;
+	int p1, count = 0;
 	unsigned int _abs_, current;
 
 	if (file_d == STDERR_FILENO)
@@ -41,14 +41,14 @@ int pr_int(int input, int file_d)
 	else
 		_abs_ = input;
 	current = _abs_;
-	for (i = 1000000000; i > 1; i /= 10)
+	for (p1 = 1000000000; p1 > 1; p1 /= 10)
 	{
-		if (_abs_ / i)
+		if (_abs_ / p1)
 		{
-			__putchar('0' + current / i);
+			__putchar('0' + current / p1);
 			count++;
 		}
-		current %= i;
+		current %= p1;
 	}
 	__putchar('0' + current);
 	count++;
@@ -99,12 +99,12 @@ char *convert_number(long int number, int base, int flags)
  */
 void remove_comments(char *buffer)
 {
-	int i;
+	int p1;
 
-	for (i = 0; buffer[i] != '\0'; i++)
-		if (buffer[i] == '#' && (!i || buffer[i - 1] == ' '))
+	for (p1 = 0; buffer[p1] != '\0'; p1++)
+		if (buffer[p1] == '#' && (!p1 || buffer[p1 - 1] == ' '))
 		{
-			buffer[i] = '\0';
+			buffer[p1] = '\0';
 			break;
 		}
 }

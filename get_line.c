@@ -2,27 +2,27 @@
 
 /**
  * input_buffer - Buffers chained commands
- * @form: The parameter struct
+ * @fm: The parameter struct
  * @buf: Address of buffer
- * @len: Address of len var
+ * @lenz: Address of lenz var
  *
  * Return: The number of bytes read.
  */
-ssize_t input_buffer(form_t *form, char **buf, size_t *len)
+ssize_t input_buffer(flex_t *fm, char **buf, size_t *lenz)
 {
 	ssize_t re_ra = 0;
 	size_t len_p = 0;
 
-	if (!*len) /* If nothing left in the buffer, fill it */
+	if (!*lenz) /* If nothing left in the buffer, fill it */
 	{
-		/*free_and_null((void **)form->cmd_buf);*/
+		/*free_and_null((void **)fm->cmd_buf);*/
 		free(*buf);
 		*buf = NULL;
 		signal(SIGINT, c_block);
 #if UGL
 		re_ra = getline(buf, &len_p, stdin);
 #else
-		re_ra = _getline(form, buf, &len_p);
+		re_ra = _getline(fm, buf, &len_p);
 #endif
 		if (re_ra > 0)
 		{
@@ -31,12 +31,12 @@ ssize_t input_buffer(form_t *form, char **buf, size_t *len)
 				(*buf)[re_ra - 1] = '\0';
 				re_ra--;
 			}
-			form->linecount_flag = 1;
+			fm->linecount_flag = 1;
 			remove_comments(*buf);
-			build_history_list(form, *buf, form->histcount++);
+			build_history_list(fm, *buf, fm->histcount++);
 			{
-				*len = re_ra;
-				form->cmd_buf = buf;
+				*lenz = re_ra;
+				fm->cmd_buf = buf;
 			}
 		}
 	}
@@ -45,43 +45,43 @@ ssize_t input_buffer(form_t *form, char **buf, size_t *len)
 
 /**
  * get_input - Gets a line minus the newline
- * @form: The parameter struct
+ * @fm: The parameter struct
  *
  * Return: The number of bytes read.
  */
-ssize_t get_input(form_t *form)
+ssize_t get_input(flex_t *fm)
 {
 	static char *buf; /* The ';' command chain buffer */
-	static size_t buf_idx, j, buf_len;
+	static size_t buf_idx, p2, buf_len;
 	ssize_t re_ra = 0;
-	char **buf_p = &(form->arg), *p;
+	char **buf_p = &(fm->arg), *par;
 
 	my_putchar(B_F);
-	re_ra = input_buffer(form, &buf, &buf_len);
+	re_ra = input_buffer(fm, &buf, &buf_len);
 	if (re_ra == -1) /* EOF */
 		return (-1);
 	if (buf_len)	/* We have commands left in the chain buffer */
 	{
-		j = buf_idx; /* Init new iterator to current buffer position */
-		p = buf + buf_idx; /* Get pointer for return */
+		p2 = buf_idx; /* Init new iterator to current buffer position */
+		par = buf + buf_idx; /* Get pointer for return */
 
-		check_chain(form, buf, &j, buf_idx, buf_len);
-		while (j < buf_len) /* Iterate to semicolon or end */
+		check_chain(fm, buf, &p2, buf_idx, buf_len);
+		while (p2 < buf_len) /* Iterate to semicolon or end */
 		{
-			if (is_chain(form, buf, &j))
+			if (chec(fm, buf, &p2))
 				break;
-			j++;
+			p2++;
 		}
 
-		buf_idx = j + 1; /* Increment past nulled ';' */
+		buf_idx = p2 + 1; /* Increment past nulled ';' */
 		if (buf_idx >= buf_len) /* Reached end of buffer? */
 		{
 			buf_idx = buf_len = 0; /* Reset position and length */
-			form->cmd_buf_type = C_N;
+			fm->cmd_buf_type = C_N;
 		}
 
-		*buf_p = p; /* Pass back pointer to current command position */
-		return (my_strlen(p)); /* Return length of current command */
+		*buf_p = par; /* Pass back pointer to current command position */
+		return (my_strlen(par)); /* Return length of current command */
 	}
 
 	*buf_p = buf; /* Else not a chain, pass back buffer from _getline() */
@@ -90,19 +90,19 @@ ssize_t get_input(form_t *form)
 
 /**
  * read_buffer - Reads a buffer
- * @form: The parameter struct
+ * @fm: The parameter struct
  * @buffer: Buffer
  * @index: Size
  *
  * Return: The number of bytes read.
  */
-ssize_t read_buffer(form_t *form, char *buffer, size_t *index)
+ssize_t read_buffer(flex_t *fm, char *buffer, size_t *index)
 {
 	ssize_t re_ra = 0;
 
 	if (*index)
 		return (0);
-	re_ra = read(form->readfd, buffer, RU_B_S);
+	re_ra = read(fm->readfd, buffer, RU_B_S);
 	if (re_ra >= 0)
 		*index = re_ra;
 	return (re_ra);
@@ -110,7 +110,7 @@ ssize_t read_buffer(form_t *form, char *buffer, size_t *index)
 
 /**
  * _getline - Retrieves the next line of input from STDIN
- * @form: The parameter struct
+ * @fm: The parameter struct
  * @line_ptr: Address of pointer to buffer, preallocated or NULL
  * @li_len: Size of preallocated line_ptr buffer if not NULL
  *
@@ -118,7 +118,7 @@ ssize_t read_buffer(form_t *form, char *buffer, size_t *index)
  */
 
 
-int _getline(form_t *form, char **line_ptr, size_t *li_len)
+int _getline(flex_t *fm, char **line_ptr, size_t *li_len)
 {
 	static char buffer[RU_B_S];
 	static size_t buf_idx, buf_len;
@@ -132,7 +132,7 @@ int _getline(form_t *form, char **line_ptr, size_t *li_len)
 	if (buf_idx == buf_len)
 		buf_idx = buf_len = 0;
 
-	re_ra = read_buffer(form, buffer, &buf_len);
+	re_ra = read_buffer(fm, buffer, &buf_len);
 	if (re_ra == -1 || (re_ra == 0 && buf_len == 0))
 		return (-1);
 

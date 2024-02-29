@@ -8,14 +8,14 @@
  */
 size_t list_len(const histo_t *h)
 {
-	size_t i = 0;
+	size_t p1 = 0;
 
 	while (h)
 	{
 		h = h->next;
-		i++;
+		p1++;
 	}
-	return (i);
+	return (p1);
 }
 
 /**
@@ -27,30 +27,30 @@ size_t list_len(const histo_t *h)
 char **list_to_strings(histo_t *head)
 {
 	histo_t *nde = head;
-	size_t i = list_len(head), j;
+	size_t p1 = list_len(head), p2;
 	char **strs;
 	char *c_r;
 
-	if (!head || !i)
+	if (!head || !p1)
 		return (NULL);
-	strs = malloc(sizeof(char *) * (i + 1));
+	strs = malloc(sizeof(char *) * (p1 + 1));
 	if (!strs)
 		return (NULL);
-	for (i = 0; nde; nde = nde->next, i++)
+	for (p1 = 0; nde; nde = nde->next, p1++)
 	{
 		c_r = malloc(my_strlen(nde->c_r) + 1);
 		if (!c_r)
 		{
-			for (j = 0; j < i; j++)
-				free(strs[j]);
+			for (p2 = 0; p2 < p1; p2++)
+				free(strs[p2]);
 			free(strs);
 			return (NULL);
 		}
 
 		c_r = my_strcpy(c_r, nde->c_r);
-		strs[i] = c_r;
+		strs[p1] = c_r;
 	}
-	strs[i] = NULL;
+	strs[p1] = NULL;
 	return (strs);
 }
 
@@ -63,7 +63,7 @@ char **list_to_strings(histo_t *head)
  */
 size_t print_list(const histo_t *h)
 {
-	size_t i = 0;
+	size_t p1 = 0;
 
 	while (h)
 	{
@@ -73,9 +73,9 @@ size_t print_list(const histo_t *h)
 		my_puts(h->c_r ? h->c_r : "(nil)");
 		my_puts("\n");
 		h = h->next;
-		i++;
+		p1++;
 	}
-	return (i);
+	return (p1);
 }
 
 /**
@@ -88,12 +88,12 @@ size_t print_list(const histo_t *h)
  */
 histo_t *node_starts_with(histo_t *nde, char *prefix, char c)
 {
-	char *p = NULL;
+	char *par = NULL;
 
 	while (nde)
 	{
-		p = starts_with(nde->c_r, prefix);
-		if (p && ((c == -1) || (*p == c)))
+		par = starts_with(nde->c_r, prefix);
+		if (par && ((c == -1) || (*par == c)))
 			return (nde);
 		nde = nde->next;
 	}
@@ -109,14 +109,14 @@ histo_t *node_starts_with(histo_t *nde, char *prefix, char c)
  */
 ssize_t get_node_index(histo_t *head, histo_t *nde)
 {
-	size_t i = 0;
+	size_t p1 = 0;
 
 	while (head)
 	{
 		if (head == nde)
-			return (i);
+			return (p1);
 		head = head->next;
-		i++;
+		p1++;
 	}
 	return (-1);
 }

@@ -21,7 +21,7 @@ typedef struct his_node
  *struct info_pas - contains pseudo-arguements to pass into a function,
  *		allowing uniform prototype for function pointer struct
  *@arg: a string generated from getline containing arguements
- *@argv: an array of strings generated from arg
+ *@arg_o_v: an array of strings generated from arg
  *@path: a string path for the current command
  *@argc: the argument count
  *@line_count: the error count
@@ -33,7 +33,7 @@ typedef struct his_node
  *@history: the history nde
  *@alias: the alias nde
  *@env_changed: on if environ was changed
- *@status: the return status of the last exec'd command
+ *@status: the return status of the last exec'z command
  *@cmd_buf: address of pointer to cmd_buf, on if chaining
  *@cmd_buf_type: CMD_type ||, &&, ;
  *@readfd: the fd from which to read line input
@@ -42,7 +42,7 @@ typedef struct his_node
 typedef struct info_pas
 {
 	char *arg;
-	char **argv;
+	char **arg_o_v;
 	char *path;
 	int argc;
 	unsigned int line_count;
@@ -60,7 +60,7 @@ typedef struct info_pas
 	int cmd_buf_type; /* CMD_type ||, &&, ; */
 	int readfd;
 	int histcount;
-} form_t;
+} flex_t;
 
 #define INFO_INIT \
 {NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, \
@@ -74,19 +74,19 @@ typedef struct info_pas
 typedef struct builtin
 {
 	char *type;
-	int (*func)(form_t *);
+	int (*func)(flex_t *);
 } builtin_table;
 
 
 
-int executable_shell(form_t *, char **);
-int find_builtin(form_t *);
-void find_cmd(form_t *);
-void fork_cmd(form_t *);
+int exe_shell(flex_t *, char **);
+int find_builtin(flex_t *);
+void find_cmd(flex_t *);
+void fork_cmd(flex_t *);
 
-int is_cmd(form_t *, char *);
+int is_cmd(flex_t *, char *);
 char *duplicate_chars(char *, int, int);
-char *find_path(form_t *, char *, char *);
+char *find_path(flex_t *, char *, char *);
 
 void _error_puts(char *);
 int my_putchar(char);
@@ -108,65 +108,63 @@ char *my_strncpy(char *, char *, int);
 char *my_strncat(char *, char *, int);
 char *my_strchr(char *, char);
 
-char **strtow(char *, char *);
+char **my_spx(char *, char *);
 
 char *_memset(char *, char, unsigned int);
 void free_string_array(char **);
 void *_realloc(void *, unsigned int, unsigned int);
 int free_and_null(void **);
 
-int c_promp(form_t *);
-int is_delimiter(char, char *);
+int c_promp(flex_t *);
+int ch_del(char, char *);
 int _isalpha(int);
-int _atoi(char *);
+int intu(char *);
 
-int _error_atoi(char *);
-void pr_erro(form_t *, char *);
+int _errorintu(char *);
+void pr_erro(flex_t *, char *);
 int pr_int(int, int);
 char *convert_number(long int, int, int);
 void remove_comments(char *);
 
-int shell_exit(form_t *);
-int _my_cd_cmd(form_t *);
+int shell_exit(flex_t *);
+int _my_cd_cmd(flex_t *);
 
 
-int _myhistory(form_t *);
-int alias_command(form_t *);
+int _myhistory(flex_t *);
+int alias_command(flex_t *);
 
-ssize_t get_input(form_t *);
-int _getline(form_t *, char **, size_t *);
+ssize_t get_input(flex_t *);
+int _getline(flex_t *, char **, size_t *);
 void c_block(int);
 
-void clear_info(form_t *);
-void set_info(form_t *, char **);
-void free_info(form_t *, int);
+void clear_info(flex_t *);
+void set_info(flex_t *, char **);
+void free_info(flex_t *, int);
 
-char *my_getenv(form_t *, const char *);
-int _myenv(form_t *);
-int _mysetenv(form_t *);
-int _myunsetenv(form_t *);
-int populate_env_list(form_t *);
+char *my_getenv(flex_t *, const char *);
+int _myenv(flex_t *);
+int _mysetenv(flex_t *);
+int _myunsetenv(flex_t *);
+int populate_env_list(flex_t *);
 
 /* toemmy_getenv.c */
-char **get_environ(form_t *);
-int _unsetenv(form_t *, char *);
-int _setenv(form_t *, char *, char *);
+char **get_environ(flex_t *);
+int _unsetenv(flex_t *, char *);
+int _setenv(flex_t *, char *, char *);
 
 /* toem_history.c */
-char *get_history_file(form_t *form);
-int write_history(form_t *form);
-int read_history(form_t *form);
-int build_history_list(form_t *form, char *buf, int linecount);
-int renumber_history(form_t *form);
+char *get_history_file(flex_t *fm);
+int write_history(flex_t *fm);
+int read_history(flex_t *fm);
+int build_history_list(flex_t *fm, char *buf, int linecount);
+int renumber_history(flex_t *fm);
 
-/* toem_vars.c */
-int is_chain(form_t *, char *, size_t *);
-void check_chain(form_t *, char *, size_t *, size_t, size_t);
-int replace_alias(form_t *);
-int replace_vars(form_t *);
+int chec(flex_t *, char *, size_t *);
+void check_chain(flex_t *, char *, size_t *, size_t, size_t);
+int replace_alias(flex_t *);
+int replace_vars(flex_t *);
 int replace_string(char **, char *);
 
-/* -- lis__it -- */
 histo_t *add_node(histo_t **, const char *, int);
 histo_t *add_node_end(histo_t **, const char *, int);
 size_t print_list_str(const histo_t *);

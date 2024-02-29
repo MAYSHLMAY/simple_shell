@@ -2,33 +2,33 @@
 
 /**
  * _myenv - prints the current environment
- * @form: Structure containing potential arguments. Used to maintain
+ * @fm: Structure containing potential arguments. Used to maintain
  *          constant function prototype.
  * Return: Always 0
  */
-int _myenv(form_t *form)
+int _myenv(flex_t *fm)
 {
-	print_list_str(form->env);
+	print_list_str(fm->env);
 	return (0);
 }
 
 /**
  * my_getenv - gets the value of an environ variable
- * @form: Structure containing potential arguments. Used to maintain
+ * @fm: Structure containing potential arguments. Used to maintain
  * @name: env var name
  *
  * Return: the value
  */
-char *my_getenv(form_t *form, const char *name)
+char *my_getenv(flex_t *fm, const char *name)
 {
-	histo_t *nde = form->env;
-	char *p;
+	histo_t *nde = fm->env;
+	char *par;
 
 	while (nde)
 	{
-		p = starts_with(nde->c_r, name);
-		if (p && *p)
-			return (p);
+		par = starts_with(nde->c_r, name);
+		if (par && *par)
+			return (par);
 		nde = nde->next;
 	}
 	return (NULL);
@@ -37,56 +37,56 @@ char *my_getenv(form_t *form, const char *name)
 /**
  * _mysetenv - Initialize a new environment variable,
  *             or modify an existing one
- * @form: Structure containing potential arguments. Used to maintain
+ * @fm: Structure containing potential arguments. Used to maintain
  *        constant function prototype.
  *  Return: Always 0
  */
-int _mysetenv(form_t *form)
+int _mysetenv(flex_t *fm)
 {
-	if (form->argc != 3)
+	if (fm->argc != 3)
 	{
 		_error_puts("Incorrect Num of args\n");
 		return (1);
 	}
-	if (_setenv(form, form->argv[1], form->argv[2]))
+	if (_setenv(fm, fm->arg_o_v[1], fm->arg_o_v[2]))
 		return (0);
 	return (1);
 }
 
 /**
  * _myunsetenv - Remove an environment variable
- * @form: Structure containing potential arguments. Used to maintain
+ * @fm: Structure containing potential arguments. Used to maintain
  *        constant function prototype.
  *  Return: Always 0
  */
-int _myunsetenv(form_t *form)
+int _myunsetenv(flex_t *fm)
 {
-	int i;
+	int p1;
 
-	if (form->argc == 1)
+	if (fm->argc == 1)
 	{
 		_error_puts("Too few arguements.\n");
 		return (1);
 	}
-	for (i = 1; i <= form->argc; i++)
-		_unsetenv(form, form->argv[i]);
+	for (p1 = 1; p1 <= fm->argc; p1++)
+		_unsetenv(fm, fm->arg_o_v[p1]);
 
 	return (0);
 }
 
 /**
  * populate_env_list - populates env linked list
- * @form: Structure containing potential arguments. Used to maintain
+ * @fm: Structure containing potential arguments. Used to maintain
  *          constant function prototype.
  * Return: Always 0
  */
-int populate_env_list(form_t *form)
+int populate_env_list(flex_t *fm)
 {
 	histo_t *nde = NULL;
-	size_t i;
+	size_t p1;
 
-	for (i = 0; environ[i]; i++)
-		add_node_end(&nde, environ[i], 0);
-	form->env = nde;
+	for (p1 = 0; environ[p1]; p1++)
+		add_node_end(&nde, environ[p1], 0);
+	fm->env = nde;
 	return (0);
 }

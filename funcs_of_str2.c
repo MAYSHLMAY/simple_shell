@@ -104,13 +104,13 @@ char *my_strdup(const char *c_r)
  */
 void my_puts(char *c_r)
 {
-	int i = 0;
+	int p1 = 0;
 
 	if (!c_r)
 		return;
-	while (c_r[i] != '\0')
+	while (c_r[p1] != '\0')
 	{
-		my_putchar(c_r[i]);
-		i++;
+		my_putchar(c_r[p1]);
+		p1++;
 	}
 }

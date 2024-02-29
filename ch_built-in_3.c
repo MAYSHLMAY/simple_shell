@@ -1,91 +1,98 @@
 #include "headers/Shell_Header.h"
 
 /**
- * check_chain - checks we should continue chaining based on last status
- * @form: the parameter struct
- * @buf: the char buffer
- * @p: address of current position in buf
- * @i: starting position in buf
- * @len: length of buf
- *
- * Return: Void
+ *intu - converts a string to an integer
+ *@s: the string to be converted
+ *Return: 0 if no numbers in string, converted number otherwise
  */
-void check_chain(form_t *form, char *buf, size_t *p, size_t i, size_t len)
+
+int intu(char *s)
 {
-	size_t j = *p;
+	int sign = 1, flag = 0, output, p1 = 0;
+	unsigned int result = 0;
 
-	if (form->cmd_buf_type == C_AND)
+	while (s[p1] != '\0' && flag != 2)
 	{
-		if (form->status)
+		if (s[p1] == '-')
+			sign *= -1;
+
+		if (s[p1] >= '0' && s[p1] <= '9')
 		{
-			buf[i] = 0;
-			j = len;
+			flag = 1;
+			result *= 10;
+			result += (s[p1] - '0');
 		}
-	}
-	if (form->cmd_buf_type == C_OR)
-	{
-		if (!form->status)
-		{
-			buf[i] = 0;
-			j = len;
-		}
+		else if (flag == 1)
+			flag = 2;
+
+		p1++;
 	}
 
-	*p = j;
+	if (sign == -1)
+		output = -result;
+	else
+		output = result;
+
+	return (output);
 }
 
-
 /**
- * replace_vars - replaces vars in the tokenized string
- * @form: the parameter struct
- *
- * Return: 1 if replaced, 0 otherwise
+ * ch_del - checks if character
+ * @c: the char to check
+ * @delim: the delimiter string
+ * Return: 1 if true, 0 if false
  */
-int replace_vars(form_t *form)
+int ch_del(char c, char *delim)
 {
-	int i = 0;
-	histo_t *nde;
-
-	for (i = 0; form->argv[i]; i++)
-	{
-		if (form->argv[i][0] != '$' || !form->argv[i][1])
-			continue;
-
-		if (!my_strcmp(form->argv[i], "$?"))
-		{
-			replace_string(&(form->argv[i]),
-				my_strdup(convert_number(form->status, 10, 0)));
-			continue;
-		}
-		if (!my_strcmp(form->argv[i], "$$"))
-		{
-			replace_string(&(form->argv[i]),
-				my_strdup(convert_number(getpid(), 10, 0)));
-			continue;
-		}
-		nde = node_starts_with(form->env, &form->argv[i][1], '=');
-		if (nde)
-		{
-			replace_string(&(form->argv[i]),
-				my_strdup(my_strchr(nde->c_r, '=') + 1));
-			continue;
-		}
-		replace_string(&form->argv[i], my_strdup(""));
-
-	}
+	while (*delim)
+		if (*delim++ == c)
+			return (1);
 	return (0);
 }
 
 /**
- * replace_string - replaces string
- * @old: address of old string
- * @new: new string
- *
- * Return: 1 if replaced, 0 otherwise
+ * chec - test if current char
+ * @fm: the parameter struct
+ * @buf: the char buffer
+ * @par: address of current position in buf
+ * Return: 1 if chain delimeter, 0 otherwise
  */
-int replace_string(char **old, char *new)
+int chec(flex_t *fm, char *buf, size_t *par)
 {
-	free(*old);
-	*old = new;
-	return (1);
+	size_t p2 = *par;
+	int ret = 0;
+
+	switch (buf[p2])
+	{
+		case '|':
+			if (buf[p2 + 1] == '|')
+			{
+				buf[p2] = 0;
+				p2++;
+				fm->cmd_buf_type = C_OR;
+				ret = 1;
+			}
+			break;
+		case '&':
+			if (buf[p2 + 1] == '&')
+			{
+				buf[p2] = 0;
+				p2++;
+				fm->cmd_buf_type = C_AND;
+				ret = 1;
+			}
+			break;
+		case ';':
+			buf[p2] = 0;
+			fm->cmd_buf_type = C_C_N;
+			ret = 1;
+			break;
+		default:
+			ret = 0;
+			break;
+	}
+
+	*par = p2;
+	return (ret);
 }
+

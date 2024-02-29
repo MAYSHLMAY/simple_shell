@@ -13,7 +13,7 @@
 #define C_OR 1
 #define C_AND 2
 #define H_FILE	".HistoryFile"
-#define H_MAX 4096
+#define H_MAX 4090
 extern char **environ;
 
 

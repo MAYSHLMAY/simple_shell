@@ -26,16 +26,16 @@ void _error_puts(char *c_r)
  */
 int _putfile_d(char c, int file_d)
 {
-	static int i;
+	static int p1;
 	static char buf[W_B_S];
 
-	if (c == B_F || i >= W_B_S)
+	if (c == B_F || p1 >= W_B_S)
 	{
-		write(file_d, buf, i);
-		i = 0;
+		write(file_d, buf, p1);
+		p1 = 0;
 	}
 	if (c != B_F)
-		buf[i++] = c;
+		buf[p1++] = c;
 	return (1);
 }
 
@@ -48,37 +48,37 @@ int _putfile_d(char c, int file_d)
  */
 int _puts_filed(char *c_r, int file_d)
 {
-	int i = 0;
+	int p1 = 0;
 
 	if (!c_r)
 		return (0);
 	while (*c_r)
 	{
-		i += _putfile_d(*c_r++, file_d);
+		p1 += _putfile_d(*c_r++, file_d);
 	}
-	return (i);
+	return (p1);
 }
 
 /**
- * _error_atoi - Converts a string to an integer.
+ * _errorintu - Converts a string to an integer.
  * @s: The string to be converted.
  *
  * Return: 0 if no numbers in string, converted number otherwise.
  *         -1 on error.
  */
-int _error_atoi(char *s)
+int _errorintu(char *s)
 {
-	int i = 0;
+	int p1 = 0;
 	unsigned long int result = 0;
 
 	if (*s == '+')
 		s++;  /* TODO: why does this make main return 255? */
-	for (i = 0; s[i] != '\0'; i++)
+	for (p1 = 0; s[p1] != '\0'; p1++)
 	{
-		if (s[i] >= '0' && s[i] <= '9')
+		if (s[p1] >= '0' && s[p1] <= '9')
 		{
 			result *= 10;
-			result += (s[i] - '0');
+			result += (s[p1] - '0');
 			if (result > INT_MAX)
 				return (-1);
 		}

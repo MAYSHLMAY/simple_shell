@@ -2,93 +2,89 @@
 
 /**
  * shell_exit - exiting
- * @form: Struct with pot args
+ * @fm: Struct with pot args
  * Return: exit status (0)
 */
 
-int shell_exit(form_t *form)
+int shell_exit(flex_t *fm)
 {
 	int e_code;
 
-	if (form->argv[1])
+	if (fm->arg_o_v[1])
 	{
-		e_code = _error_atoi(form->argv[1]);
+		e_code = _errorintu(fm->arg_o_v[1]);
 		if (e_code == -1)
 		{
-			form->status = 2;
-			pr_erro(form, ":( ");
-			_error_puts(form->argv[1]);
+			fm->status = 2;
+			pr_erro(fm, ":( ");
+			_error_puts(fm->arg_o_v[1]);
 			my_putchar('\n');
 			return (1);
 		}
-		form->err_num = e_code;
+		fm->err_num = e_code;
 		return (-2);
 	}
-	form->err_num = -1;
+	fm->err_num = -1;
 	return (-2);
 }
 
 /**
- * _my_cd_cmd - changes the current directory
- * @form: Structure contains potential args
+ * _my_cd_cmd - change the ccd
+ * @fm: Structure contains potential args
  *
  * Return: Always (0)
  */
 
-int _my_cd_cmd(form_t *form)
+int _my_cd_cmd(flex_t *fm)
 {
 	char *cwd, buffer[1024];
-	int chdir_result;
+	int chdir_res;
 
 	cwd = getcwd(buffer, 1024);
-	if (!form->argv[1])
+	if (!fm->arg_o_v[1])
 	{
-		if (my_getenv(form, "HOME="))
-			chdir_result = chdir(my_getenv(form, "HOME="));
+		if (my_getenv(fm, "HOME="))
+			chdir_res = chdir(my_getenv(fm, "HOME="));
 		else
-			chdir_result = chdir("/");
+			chdir_res = chdir("/");
 	}
-	else if (my_strcmp(form->argv[1], "-") == 0)
+	else if (my_strcmp(fm->arg_o_v[1], "-") == 0)
 	{
-		if (!my_getenv(form, "OLDPWD="))
+		if (!my_getenv(fm, "OLDPWD="))
 		{
 			my_puts(cwd);
 			my_putchar('\n');
 			return (1);
 		}
-		my_puts(my_getenv(form, "OLDPWD="));
+		my_puts(my_getenv(fm, "OLDPWD="));
 		my_putchar('\n');
-		chdir_result = chdir(my_getenv(form, "OLDPWD="));
+		chdir_res = chdir(my_getenv(fm, "OLDPWD="));
 	}
 	else
-		chdir_result = chdir(form->argv[1]);
+		chdir_res = chdir(fm->arg_o_v[1]);
 
-	if (chdir_result == -1)
+	if (chdir_res == -1)
 	{
-		pr_erro(form, "can't change directory ");
-		_error_puts(form->argv[1]);
+		pr_erro(fm, "can't change .... ");
+		_error_puts(fm->arg_o_v[1]);
 		my_putchar('\n');
 	}
 	else
 	{
-		_setenv(form, "OLDPWD", my_getenv(form, "PWD="));
-		_setenv(form, "PWD", getcwd(buffer, 1024));
+		_setenv(fm, "OLDPWD", my_getenv(fm, "PWD="));
+		_setenv(fm, "PWD", getcwd(buffer, 1024));
 	}
 	return (0);
 }
 
 
 /**
- * _myhistory - displays the history list, one command by line, preceded
- *              with line numbers, starting at 0.
- * @form: Structure containing potential arguments. Used to maintain
- *        constant function prototype.
+ * _myhistory - displays the history list,
+ * @fm: Structure containing ppotential Args
  *  Return: Always 0
  */
-int _myhistory(form_t *form)
+int _myhistory(flex_t *fm)
 {
-	print_list(form->history);
+	print_list(fm->history);
 	return (0);
 }
-
-
