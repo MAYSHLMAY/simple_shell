@@ -3,10 +3,10 @@
 /**
  * exe_shell - main shell loop
  * @fm: the parameter & return fm struct
- * @arg_o_v: the argument vector from main()
+ * @arg_v: the argument vector from main()
  * Return: 0 / 1
  */
-int exe_shell(flex_t *fm, char **arg_o_v)
+int exe_shell(flex_t *fm, char **arg_v)
 {
 	ssize_t rms;
 	int bt_ret = 0;
@@ -14,25 +14,25 @@ int exe_shell(flex_t *fm, char **arg_o_v)
 	for (rms = 0; rms != -1 && bt_ret != -2;)
 	{
 		clear_info(fm);
-		if (c_promp(fm))
+		if (c_p(fm))
 			my_puts("$ ");
 		my_putchar(B_F);
 		rms = get_input(fm);
 		if (rms != -1)
 		{
-			set_info(fm, arg_o_v);
+			set_info(fm, arg_v);
 			bt_ret = find_builtin(fm);
 			if (bt_ret == -1)
 				find_cmd(fm);
 			free_info(fm, 0);
 		}
-		else if (c_promp(fm))
+		else if (c_p(fm))
 			my_putchar('\n');
 	}
 
 	write_history(fm);
 	free_info(fm, 1);
-	if (!c_promp(fm) && fm->status)
+	if (!c_p(fm) && fm->status)
 		exit(fm->status);
 	if (bt_ret == -2)
 	{
@@ -66,7 +66,7 @@ int find_builtin(flex_t *fm)
 	};
 
 	for (p1 = 0; builtintbl[p1].type; p1++)
-		if (my_strcmp(fm->arg_o_v[0], builtintbl[p1].type) == 0)
+		if (my_strcmp(fm->arg_v[0], builtintbl[p1].type) == 0)
 		{
 			fm->line_count++;
 			built_in_ret = builtintbl[p1].func(fm);
@@ -78,7 +78,6 @@ int find_builtin(flex_t *fm)
 /**
  * find_cmd - finds a command in PATH
  * @fm: the parameter & return fm struct
- *
  * Return: void
  */
 void find_cmd(flex_t *fm)
@@ -86,43 +85,29 @@ void find_cmd(flex_t *fm)
 	char *path = NULL;
 	int p1, p3;
 
-	fm->path = fm->arg_o_v[0];
-	if (fm->linecount_flag == 1)
+	fm->path = fm->arg_v[0];
+	if (fm->linecount_flag)
 	{
 		fm->line_count++;
 		fm->linecount_flag = 0;
 	}
 	for (p1 = 0, p3 = 0; fm->arg[p1]; p1++)
-		if (!ch_del(fm->arg[p1], " \t\n"))
-			p3++;
+		p3 += !ch_del(fm->arg[p1], " \t\n");
 	if (!p3)
 		return;
-	path = find_path(fm, my_getenv(fm, "PATH="), fm->arg_o_v[0]);
+	path = find_path(fm, my_gev(fm, "PATH="), fm->arg_v[0]);
 	if (path)
 	{
 		fm->path = path;
 		fork_cmd(fm);
 	}
-	else
+	else if ((c_p(fm) || my_gev(fm, "PATH=") || fm->arg_v[0][0] == '/')
+	&& is_cmd(fm, fm->arg_v[0]))
+		fork_cmd(fm);
+	else if (*(fm->arg) != '\n')
 	{
-		int cs = c_promp(fm) || my_getenv(fm, "PATH=") || fm->arg_o_v[0][0] == '/';
-
-		switch (cs)
-		{
-			case 1:
-				if (is_cmd(fm, fm->arg_o_v[0]))
-					fork_cmd(fm);
-				break;
-			case 0:
-				if (*(fm->arg) != '\n')
-				{
-					fm->status = 127;
-					pr_erro(fm, "not found:(\n");
-				}
-				break;
-			default:
-				break;
-		}
+		fm->status = 127;
+		pr_erro(fm, "not found:(\n");
 	}
 }
 
@@ -145,7 +130,7 @@ void fork_cmd(flex_t *fm)
 	}
 	if (child_pid == 0)
 	{
-		if (execve(fm->path, fm->arg_o_v, get_environ(fm)) == -1)
+		if (execve(fm->path, fm->arg_v, get_environ(fm)) == -1)
 		{
 			free_info(fm, 1);
 			if (errno == EACCES)

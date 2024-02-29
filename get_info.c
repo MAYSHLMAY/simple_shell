@@ -7,7 +7,7 @@
 void clear_info(flex_t *fm)
 {
 	fm->arg = NULL;
-	fm->arg_o_v = NULL;
+	fm->arg_v = NULL;
 	fm->path = NULL;
 	fm->argc = 0;
 }
@@ -15,27 +15,27 @@ void clear_info(flex_t *fm)
 /**
  * set_info - initializes flex_t struct
  * @fm: struct address
- * @arg_o_v: argument vector
+ * @arg_v: argument vector
  */
-void set_info(flex_t *fm, char **arg_o_v)
+void set_info(flex_t *fm, char **arg_v)
 {
 	int p1 = 0;
 
-	fm->fname = arg_o_v[0];
+	fm->fname = arg_v[0];
 	if (fm->arg)
 	{
-		fm->arg_o_v = my_spx(fm->arg, " \t");
-		if (!fm->arg_o_v)
+		fm->arg_v = my_spx(fm->arg, " \t");
+		if (!fm->arg_v)
 		{
 
-			fm->arg_o_v = malloc(sizeof(char *) * 2);
-			if (fm->arg_o_v)
+			fm->arg_v = malloc(sizeof(char *) * 2);
+			if (fm->arg_v)
 			{
-				fm->arg_o_v[0] = my_strdup(fm->arg);
-				fm->arg_o_v[1] = NULL;
+				fm->arg_v[0] = my_strdup(fm->arg);
+				fm->arg_v[1] = NULL;
 			}
 		}
-		for (p1 = 0; fm->arg_o_v && fm->arg_o_v[p1]; p1++)
+		for (p1 = 0; fm->arg_v && fm->arg_v[p1]; p1++)
 			;
 		fm->argc = p1;
 
@@ -50,8 +50,8 @@ void set_info(flex_t *fm, char **arg_o_v)
  */
 void free_info(flex_t *fm, int all)
 {
-	free_string_array(fm->arg_o_v);
-	fm->arg_o_v = NULL;
+	free_string_array(fm->arg_v);
+	fm->arg_v = NULL;
 	fm->path = NULL;
 	if (all)
 	{

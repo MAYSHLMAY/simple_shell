@@ -47,32 +47,32 @@ int replace_vars(flex_t *fm)
 	int p1 = 0;
 	histo_t *nde;
 
-	for (p1 = 0; fm->arg_o_v[p1]; p1++)
+	for (p1 = 0; fm->arg_v[p1]; p1++)
 	{
-		if (fm->arg_o_v[p1][0] != '$' || !fm->arg_o_v[p1][1])
+		if (fm->arg_v[p1][0] != '$' || !fm->arg_v[p1][1])
 			continue;
 
 check_variable:
-		if (!my_strcmp(fm->arg_o_v[p1], "$?"))
+		if (!my_strcmp(fm->arg_v[p1], "$?"))
 		{
-			replace_string(&(fm->arg_o_v[p1]),
+			replace_string(&(fm->arg_v[p1]),
 			my_strdup(convert_number(fm->status, 10, 0)));
 			continue;
 		}
-		if (!my_strcmp(fm->arg_o_v[p1], "$$"))
+		if (!my_strcmp(fm->arg_v[p1], "$$"))
 		{
-			replace_string(&(fm->arg_o_v[p1]),
+			replace_string(&(fm->arg_v[p1]),
 			my_strdup(convert_number(getpid(), 10, 0)));
 			continue;
 		}
-		nde = node_starts_with(fm->env, &fm->arg_o_v[p1][1], '=');
+		nde = node_starts_with(fm->env, &fm->arg_v[p1][1], '=');
 		if (nde)
 		{
-			replace_string(&(fm->arg_o_v[p1]),
+			replace_string(&(fm->arg_v[p1]),
 			my_strdup(my_strchr(nde->c_r, '=') + 1));
 			continue;
 		}
-		replace_string(&fm->arg_o_v[p1], my_strdup(""));
+		replace_string(&fm->arg_v[p1], my_strdup(""));
 
 		goto check_variable;
 	}
@@ -94,12 +94,12 @@ int replace_string(char **old, char *new)
 }
 
 /**
- * c_promp - returns true if shell is interactive mode
+ * c_p - returns true if shell is interactive mode
  * @fm: struct address
  *
- * Return: 1 if c_promp mode, 0 otherwise
+ * Return: 1 if c_p mode, 0 otherwise
  */
-int c_promp(flex_t *fm)
+int c_p(flex_t *fm)
 {
 	return (isatty(STDIN_FILENO) && fm->readfd <= 2);
 }

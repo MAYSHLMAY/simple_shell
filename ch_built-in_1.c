@@ -10,14 +10,14 @@ int shell_exit(flex_t *fm)
 {
 	int e_code;
 
-	if (fm->arg_o_v[1])
+	if (fm->arg_v[1])
 	{
-		e_code = _errorintu(fm->arg_o_v[1]);
+		e_code = _errorintu(fm->arg_v[1]);
 		if (e_code == -1)
 		{
 			fm->status = 2;
 			pr_erro(fm, ":( ");
-			_error_puts(fm->arg_o_v[1]);
+			_error_puts(fm->arg_v[1]);
 			my_putchar('\n');
 			return (1);
 		}
@@ -41,37 +41,37 @@ int _my_cd_cmd(flex_t *fm)
 	int chdir_res;
 
 	cwd = getcwd(buffer, 1024);
-	if (!fm->arg_o_v[1])
+	if (!fm->arg_v[1])
 	{
-		if (my_getenv(fm, "HOME="))
-			chdir_res = chdir(my_getenv(fm, "HOME="));
+		if (my_gev(fm, "HOME="))
+			chdir_res = chdir(my_gev(fm, "HOME="));
 		else
 			chdir_res = chdir("/");
 	}
-	else if (my_strcmp(fm->arg_o_v[1], "-") == 0)
+	else if (my_strcmp(fm->arg_v[1], "-") == 0)
 	{
-		if (!my_getenv(fm, "OLDPWD="))
+		if (!my_gev(fm, "OLDPWD="))
 		{
 			my_puts(cwd);
 			my_putchar('\n');
 			return (1);
 		}
-		my_puts(my_getenv(fm, "OLDPWD="));
+		my_puts(my_gev(fm, "OLDPWD="));
 		my_putchar('\n');
-		chdir_res = chdir(my_getenv(fm, "OLDPWD="));
+		chdir_res = chdir(my_gev(fm, "OLDPWD="));
 	}
 	else
-		chdir_res = chdir(fm->arg_o_v[1]);
+		chdir_res = chdir(fm->arg_v[1]);
 
 	if (chdir_res == -1)
 	{
 		pr_erro(fm, "can't change .... ");
-		_error_puts(fm->arg_o_v[1]);
+		_error_puts(fm->arg_v[1]);
 		my_putchar('\n');
 	}
 	else
 	{
-		_setenv(fm, "OLDPWD", my_getenv(fm, "PWD="));
+		_setenv(fm, "OLDPWD", my_gev(fm, "PWD="));
 		_setenv(fm, "PWD", getcwd(buffer, 1024));
 	}
 	return (0);

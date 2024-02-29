@@ -12,7 +12,7 @@ void pr_erro(flex_t *fm, char *estr)
 	_error_puts(": ");
 	pr_int(fm->line_count, STDERR_FILENO);
 	_error_puts(": ");
-	_error_puts(fm->arg_o_v[0]);
+	_error_puts(fm->arg_v[0]);
 	_error_puts(": ");
 	_error_puts(estr);
 }

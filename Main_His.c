@@ -11,7 +11,7 @@ char *get_history_file(flex_t *fm)
 {
 	char *buf, *dir;
 
-	dir = my_getenv(fm, "HOME=");
+	dir = my_gev(fm, "HOME=");
 	if (!dir)
 		return (NULL);
 	buf = malloc(sizeof(char) * (my_strlen(dir) + my_strlen(H_FILE) + 2));

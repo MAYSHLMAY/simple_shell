@@ -21,7 +21,7 @@ typedef struct his_node
  *struct info_pas - contains pseudo-arguements to pass into a function,
  *		allowing uniform prototype for function pointer struct
  *@arg: a string generated from getline containing arguements
- *@arg_o_v: an array of strings generated from arg
+ *@arg_v: an array of strings generated from arg
  *@path: a string path for the current command
  *@argc: the argument count
  *@line_count: the error count
@@ -42,7 +42,7 @@ typedef struct his_node
 typedef struct info_pas
 {
 	char *arg;
-	char **arg_o_v;
+	char **arg_v;
 	char *path;
 	int argc;
 	unsigned int line_count;
@@ -115,7 +115,7 @@ void free_string_array(char **);
 void *_realloc(void *, unsigned int, unsigned int);
 int free_and_null(void **);
 
-int c_promp(flex_t *);
+int c_p(flex_t *);
 int ch_del(char, char *);
 int _isalpha(int);
 int intu(char *);
@@ -141,13 +141,13 @@ void clear_info(flex_t *);
 void set_info(flex_t *, char **);
 void free_info(flex_t *, int);
 
-char *my_getenv(flex_t *, const char *);
+char *my_gev(flex_t *, const char *);
 int _myenv(flex_t *);
 int _mysetenv(flex_t *);
 int _myunsetenv(flex_t *);
 int populate_env_list(flex_t *);
 
-/* toemmy_getenv.c */
+/* toemmy_gev.c */
 char **get_environ(flex_t *);
 int _unsetenv(flex_t *, char *);
 int _setenv(flex_t *, char *, char *);

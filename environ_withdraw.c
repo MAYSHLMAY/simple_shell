@@ -13,13 +13,13 @@ int _myenv(flex_t *fm)
 }
 
 /**
- * my_getenv - gets the value of an environ variable
+ * my_gev - gets the value of an environ variable
  * @fm: Structure containing potential arguments. Used to maintain
  * @name: env var name
  *
  * Return: the value
  */
-char *my_getenv(flex_t *fm, const char *name)
+char *my_gev(flex_t *fm, const char *name)
 {
 	histo_t *nde = fm->env;
 	char *par;
@@ -48,7 +48,7 @@ int _mysetenv(flex_t *fm)
 		_error_puts("Incorrect Num of args\n");
 		return (1);
 	}
-	if (_setenv(fm, fm->arg_o_v[1], fm->arg_o_v[2]))
+	if (_setenv(fm, fm->arg_v[1], fm->arg_v[2]))
 		return (0);
 	return (1);
 }
@@ -69,7 +69,7 @@ int _myunsetenv(flex_t *fm)
 		return (1);
 	}
 	for (p1 = 1; p1 <= fm->argc; p1++)
-		_unsetenv(fm, fm->arg_o_v[p1]);
+		_unsetenv(fm, fm->arg_v[p1]);
 
 	return (0);
 }
