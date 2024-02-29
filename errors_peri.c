@@ -17,12 +17,11 @@ void _error_puts(char *c_r)
 }
 
 /**
- * _putfile_d - Writes the character c to the given file descriptor.
+ * _putfile_d - Writes the character c 
  * @c: The character to print.
  * @file_d: The file descriptor to write to.
  *
  * Return: On success 1.
- *         On error, -1 is returned, and errno is set appropriately.
  */
 int _putfile_d(char c, int file_d)
 {
@@ -44,7 +43,7 @@ int _putfile_d(char c, int file_d)
  * @c_r: The string to be printed.
  * @file_d: The file descriptor to write to.
  *
- * Return: The number of characters put.
+ * Return: The number of chars put.
  */
 int _puts_filed(char *c_r, int file_d)
 {
@@ -63,8 +62,7 @@ int _puts_filed(char *c_r, int file_d)
  * _errorintu - Converts a string to an integer.
  * @s: The string to be converted.
  *
- * Return: 0 if no numbers in string, converted number otherwise.
- *         -1 on error.
+ * Return: 0 if no numbers 
  */
 int _errorintu(char *s)
 {
@@ -72,7 +70,7 @@ int _errorintu(char *s)
 	unsigned long int result = 0;
 
 	if (*s == '+')
-		s++;  /* TODO: why does this make main return 255? */
+		s++;
 	for (p1 = 0; s[p1] != '\0'; p1++)
 	{
 		if (s[p1] >= '0' && s[p1] <= '9')

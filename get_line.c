@@ -51,22 +51,22 @@ ssize_t input_buffer(flex_t *fm, char **buf, size_t *lenz)
  */
 ssize_t get_input(flex_t *fm)
 {
-	static char *buf; /* The ';' command chain buffer */
+	static char *buf;
 	static size_t buf_idx, p2, buf_len;
 	ssize_t re_ra = 0;
 	char **buf_p = &(fm->arg), *par;
 
 	my_putchar(B_F);
 	re_ra = input_buffer(fm, &buf, &buf_len);
-	if (re_ra == -1) /* EOF */
+	if (re_ra == -1)
 		return (-1);
-	if (buf_len)	/* We have commands left in the chain buffer */
+	if (buf_len)
 	{
-		p2 = buf_idx; /* Init new iterator to current buffer position */
-		par = buf + buf_idx; /* Get pointer for return */
+		p2 = buf_idx;
+		par = buf + buf_idx;
 
 		check_chain(fm, buf, &p2, buf_idx, buf_len);
-		while (p2 < buf_len) /* Iterate to semicolon or end */
+		while (p2 < buf_len)
 		{
 			if (chec(fm, buf, &p2))
 				break;

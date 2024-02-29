@@ -2,8 +2,7 @@
 
 /**
  * _myenv - prints the current environment
- * @fm: Structure containing potential arguments. Used to maintain
- *          constant function prototype.
+ * @fm: Structure 
  * Return: Always 0
  */
 int _myenv(flex_t *fm)
@@ -14,7 +13,7 @@ int _myenv(flex_t *fm)
 
 /**
  * my_gev - gets the value of an environ variable
- * @fm: Structure containing potential arguments. Used to maintain
+ * @fm: Structure
  * @name: env var name
  *
  * Return: the value
@@ -35,10 +34,8 @@ char *my_gev(flex_t *fm, const char *name)
 }
 
 /**
- * _mysetenv - Initialize a new environment variable,
- *             or modify an existing one
- * @fm: Structure containing potential arguments. Used to maintain
- *        constant function prototype.
+ * _mysetenv - Initializ
+ * @fm: Structure containing a potent
  *  Return: Always 0
  */
 int _mysetenv(flex_t *fm)
@@ -54,9 +51,8 @@ int _mysetenv(flex_t *fm)
 }
 
 /**
- * _myunsetenv - Remove an environment variable
- * @fm: Structure containing potential arguments. Used to maintain
- *        constant function prototype.
+ * _myunsetenv - Remove an env var
+ * @fm: Structure containing 
  *  Return: Always 0
  */
 int _myunsetenv(flex_t *fm)
@@ -75,9 +71,8 @@ int _myunsetenv(flex_t *fm)
 }
 
 /**
- * populate_env_list - populates env linked list
- * @fm: Structure containing potential arguments. Used to maintain
- *          constant function prototype.
+ * populate_env_list - populates
+ * @fm: Structure
  * Return: Always 0
  */
 int populate_env_list(flex_t *fm)

@@ -57,14 +57,14 @@ int pr_int(int input, int file_d)
 }
 
 /**
- * convert_number - Converter function, a clone of itoa.
+ * num_cv - Converter function, a clone of itoa.
  * @number: Number.
  * @base: Base.
  * @flags: Argument flags.
  *
  * Return: String.
  */
-char *convert_number(long int number, int base, int flags)
+char *num_cv(long int number, int base, int flags)
 {
 	static char *array;
 	static char buffer[50];
@@ -92,7 +92,7 @@ char *convert_number(long int number, int base, int flags)
 }
 
 /**
- * remove_comments - Function replaces the first instance of '#' with '\0'.
+ * remove_comments - Function replacer
  * @buffer: Address of the string to modify.
  *
  * Return: Always 0.

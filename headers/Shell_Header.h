@@ -18,26 +18,25 @@ typedef struct his_node
 } histo_t;
 
 /**
- *struct info_pas - contains pseudo-arguements to pass into a function,
- *		allowing uniform prototype for function pointer struct
- *@arg: a string generated from getline containing arguements
+ *struct info_pas - contains pseudo-arguements
+ *@arg: a string generated 
  *@arg_v: an array of strings generated from arg
- *@path: a string path for the current command
+ *@path: a string path
  *@argc: the argument count
  *@line_count: the error count
- *@err_num: the error code for exit()s
- *@linecount_flag: if on count this line of input
- *@fname: the program filename
- *@env: linked list local copy of environ
- *@environ: custom modified copy of environ from LL env
+ *@err_num: the error code
+ *@linecount_flag: if line_c
+ *@fname: the program f_name
+ *@env: linked list
+ *@environ: custom modified
  *@history: the history nde
  *@alias: the alias nde
- *@env_changed: on if environ was changed
- *@status: the return status of the last exec'z command
- *@cmd_buf: address of pointer to cmd_buf, on if chaining
- *@cmd_buf_type: CMD_type ||, &&, ;
- *@readfd: the fd from which to read line input
- *@histcount: the history line number count
+ *@env_changed: on if environ
+ *@status: the return
+ *@cmd_buf: chn
+ *@cmd_buf_type: ||, &&, ;
+ *@readfd: the fd
+ *@histcount: line number count
  */
 typedef struct info_pas
 {
@@ -123,7 +122,7 @@ int intu(char *);
 int _errorintu(char *);
 void pr_erro(flex_t *, char *);
 int pr_int(int, int);
-char *convert_number(long int, int, int);
+char *num_cv(long int, int, int);
 void remove_comments(char *);
 
 int shell_exit(flex_t *);

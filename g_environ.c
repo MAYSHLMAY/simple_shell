@@ -50,10 +50,9 @@ int _unsetenv(flex_t *fm, char *var)
 }
 
 /**
- * _setenv - Initialize a new environment variable,
+ * _setenv - Initialize a new env var,
  *             or modify an existing one
- * @fm: Structure containing potential arguments. Used to maintain
- *        constant function prototype.
+ * @fm: Structure potential args
  * @var: the string env var property
  * @value: the string env var value
  *  Return: Always 0

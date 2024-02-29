@@ -67,7 +67,7 @@ size_t print_list(const histo_t *h)
 
 	while (h)
 	{
-		my_puts(convert_number(h->num, 10, 0));
+		my_puts(num_cv(h->num, 10, 0));
 		my_putchar(':');
 		my_putchar(' ');
 		my_puts(h->c_r ? h->c_r : "(nil)");

@@ -56,13 +56,13 @@ check_variable:
 		if (!my_strcmp(fm->arg_v[p1], "$?"))
 		{
 			replace_string(&(fm->arg_v[p1]),
-			my_strdup(convert_number(fm->status, 10, 0)));
+			my_strdup(num_cv(fm->status, 10, 0)));
 			continue;
 		}
 		if (!my_strcmp(fm->arg_v[p1], "$$"))
 		{
 			replace_string(&(fm->arg_v[p1]),
-			my_strdup(convert_number(getpid(), 10, 0)));
+			my_strdup(num_cv(getpid(), 10, 0)));
 			continue;
 		}
 		nde = node_starts_with(fm->env, &fm->arg_v[p1][1], '=');
