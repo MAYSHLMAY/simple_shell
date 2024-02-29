@@ -56,8 +56,8 @@ typedef struct info_pas
 	int env_changed;
 	int status;
 
-	char **cmd_buf; /* pointer to cmd ; chain buffer, for memory mangement */
-	int cmd_buf_type; /* CMD_type ||, &&, ; */
+	char **cmd_buf;
+	int cmd_buf_type;
 	int readfd;
 	int histcount;
 } flex_t;
@@ -147,12 +147,10 @@ int _mysetenv(flex_t *);
 int _myunsetenv(flex_t *);
 int populate_env_list(flex_t *);
 
-/* toemmy_gev.c */
 char **get_environ(flex_t *);
 int _unsetenv(flex_t *, char *);
 int _setenv(flex_t *, char *, char *);
 
-/* toem_history.c */
 char *get_history_file(flex_t *fm);
 int write_history(flex_t *fm);
 int read_history(flex_t *fm);
